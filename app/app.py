@@ -46,7 +46,8 @@ def start_chat() -> None:
         with st.chat_message("assistant"):
             st.markdown(response)
         # Add assistant's response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        st.session_state.messages.append(
+            {"role": "assistant", "content": response})
 
 
 if __name__ == "__main__":

@@ -54,7 +54,6 @@ def load_documents() -> List[Document]:
 
 def load_embeddings(documents: List[Document], user_query: str) -> Chroma:
     """Create a vector store from a set of documents."""
-
     db = Chroma.from_documents(documents, OpenAIEmbeddings())
     docs = db.similarity_search(user_query)
     return db.as_retriever()
@@ -64,7 +63,6 @@ def generate_response(retriever: Chroma, user_input: str) -> str:
     # Create a prompt template using a template from the config module and input variables
     # representing the context and question.
     # create the prompt
-
     chain = (
             {"context": retriever, "question": RunnablePassthrough()}
             | chat_prompt_template
