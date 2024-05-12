@@ -45,9 +45,11 @@ def format_docs(docs: List[Document]) -> str:
     return "\n\n".join([d.page_content for d in docs])
 
 
-def load_documents() -> List[Document]:
+def load_documents(relative_path: str) -> List[Document]:
     """Load a file from path, split it into chunks, embed each chunk and load it into the vector store."""
-    raw_documents = TextLoader("./docs/faq_abc.txt").load()
+    script_dir = os.path.dirname(__file__)
+    absolute_path = os.path.join(script_dir, relative_path)
+    raw_documents = TextLoader(absolute_path).load()
     text_splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
     return text_splitter.split_documents(raw_documents)
 
@@ -55,6 +57,7 @@ def load_documents() -> List[Document]:
 def load_embeddings(documents: List[Document], user_query: str) -> Chroma:
     """Create a vector store from a set of documents."""
     db = Chroma.from_documents(documents, OpenAIEmbeddings())
+    # TODO: Fix the following line - unused 'docs'
     docs = db.similarity_search(user_query)
     return db.as_retriever()
 
@@ -73,7 +76,7 @@ def generate_response(retriever: Chroma, user_input: str) -> str:
 
 
 def query(user_input: str) -> str:
-    documents = load_documents()
+    documents = load_documents("./docs/faq_abc.txt")
     retriever = load_embeddings(documents, user_input)
     response = generate_response(retriever, user_input)
     return response

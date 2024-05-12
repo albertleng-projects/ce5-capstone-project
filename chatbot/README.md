@@ -44,9 +44,9 @@ source env/bin/activate
 
 ## 🏗️ Installation:
 
-### Install [Python 3.10](https://www.python.org/downloads/release/python-3100/) (preferable) or higher
+### Install [Python 3.10](https://www.python.org/downloads/release/python-3100/) (preferable)
+`Note: This project was developed and tested using Python 3.10.0.` 
 
-use pip on a Mac or Linux and pip on Windows
 
 ```
 pip install -r requirements.txt
@@ -57,18 +57,22 @@ pip install --upgrade langchain
 
 ### Set the key as an environment variable:
 
-`export OPENAI_API_KEY='sk-brHeh...A39v5iXsM2'`
+`export OPENAI_API_KEY='your_openai_api_key'`
 
 .env file:
 
 ```
-OPENAI_API_KEY=sk-brHeh...A39v5iXsM2
+OPENAI_API_KEY=[your_openai_api_key]
 ```
 
-## ▶️ Start the app (Optional):
+## 📝 Run unit tests:
 
-`python app.py`
+`pytest tests/`
+
+or run by ignoring warnings
+
+`pytest -p no:warnings tests/`
 
 ## ▶️ start streamlit app on localhost:8501:
 
-`streamlit run app.py`
+`streamlit run app/app.py`

@@ -2,7 +2,7 @@ import streamlit as st
 import openai
 import os
 from dotenv import load_dotenv
-from main import query
+from bot_logic import query
 
 load_dotenv()
 
