@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import TextLoader
+from langchain.schema.document import Document
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import (
     CharacterTextSplitter,
@@ -14,6 +15,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.schema import StrOutputParser
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.vectorstores import Chroma
+from typing import List
 
 load_dotenv()
 
@@ -39,44 +41,41 @@ chat_prompt_template = ChatPromptTemplate.from_messages(
 model = ChatOpenAI()
 
 
-def format_docs(docs):
+def format_docs(docs: List[Document]) -> str:
     return "\n\n".join([d.page_content for d in docs])
 
 
-def load_documents():
+def load_documents() -> List[Document]:
     """Load a file from path, split it into chunks, embed each chunk and load it into the vector store."""
     raw_documents = TextLoader("./docs/faq_abc.txt").load()
     text_splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
     return text_splitter.split_documents(raw_documents)
 
 
-def load_embeddings(documents, user_query):
+def load_embeddings(documents: List[Document], user_query: str) -> Chroma:
     """Create a vector store from a set of documents."""
-    print("Loading embeddings...")
 
     db = Chroma.from_documents(documents, OpenAIEmbeddings())
     docs = db.similarity_search(user_query)
-    print(docs)
     return db.as_retriever()
 
 
-def generate_response(retriever, query):
-    pass
+def generate_response(retriever: Chroma, user_input: str) -> str:
     # Create a prompt template using a template from the config module and input variables
     # representing the context and question.
     # create the prompt
 
     chain = (
-        {"context": retriever, "question": RunnablePassthrough()}
-        | chat_prompt_template
-        | model
-        | StrOutputParser()
+            {"context": retriever, "question": RunnablePassthrough()}
+            | chat_prompt_template
+            | model
+            | StrOutputParser()
     )
-    return chain.invoke(query)
+    return chain.invoke(user_input)
 
 
-def query(query):
+def query(user_input: str) -> str:
     documents = load_documents()
-    retriever = load_embeddings(documents, query)
-    response = generate_response(retriever, query)
+    retriever = load_embeddings(documents, user_input)
+    response = generate_response(retriever, user_input)
     return response

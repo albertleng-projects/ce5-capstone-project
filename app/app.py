@@ -14,7 +14,7 @@ st.title("🤖 Chatbot App")
 chat_placeholder = st.empty()
 
 
-def init_chat_history():
+def init_chat_history() -> None:
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
         st.session_state.messages = [
@@ -22,7 +22,7 @@ def init_chat_history():
         ]
 
 
-def start_chat():
+def start_chat() -> None:
     # Display chat messages from history on app rerun
     with chat_placeholder.container():
         for message in st.session_state.messages:
