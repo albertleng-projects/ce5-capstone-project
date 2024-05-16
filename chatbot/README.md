@@ -74,6 +74,14 @@ or run by ignoring warnings
 
 `streamlit run app/app.py`
 
+## 🌐 Access App:
+
+After starting the app, visit `http://localhost:8501`  
+  
+
+This opens the app in your browser. Have fun! 😎  
+<img src="chatbot.gif" width="50%" height="50%">
+
 ## 🐳 Alternatively, using Docker:
 ### Build the container image:
 
