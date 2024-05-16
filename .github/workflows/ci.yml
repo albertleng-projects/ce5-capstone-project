@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    steps:
+    - name: Checkout code 📦
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.10.14 🐍
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10.14'
+
+    - name: Install dependencies 📚
+      run: |
+        cd chatbot
+        pip install -r requirements.txt
+        pip install --upgrade langchain
+
+    - name: Run unit tests 🧪
+      run: |
+        cd chatbot
+        pytest tests/
+
+    - name: Print summary 📝
+      run: |
+        echo "✅ Checkout code"
+        echo "✅ Install dependencies"
+        echo "✅ Run unit tests"
