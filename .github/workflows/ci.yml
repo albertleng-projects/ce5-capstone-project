@@ -27,7 +27,9 @@ jobs:
         pip install --upgrade langchain
 
     - name: Run unit tests 🧪
-      run: pytest tests/
+      run: |
+        cd chatbot
+        pytest tests/
 
     - name: Print summary 📝
       run: |
