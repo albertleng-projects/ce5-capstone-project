@@ -22,6 +22,7 @@ jobs:
 
     - name: Install dependencies 📚
       run: |
+        cd chatbot
         pip install -r requirements.txt
         pip install --upgrade langchain
 
