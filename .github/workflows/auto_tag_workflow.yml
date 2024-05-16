@@ -27,7 +27,7 @@ jobs:
             const branchName = context.payload.pull_request.head.ref
             const date = new Date().toISOString().split('T')[0]
             const time = new Date().toISOString().split('T')[1].split('.')[0].replace(/:/g, '-')
-            const tagName = `${branchName}-merged-into-${context.payload.pull_request.base.ref}@${date}-${time}`
+            const tagName = `merged-into-${context.payload.pull_request.base.ref}@${date}-${time}`
             
             await github.rest.git.createRef({
               owner,
@@ -44,4 +44,4 @@ jobs:
               time
             }
       - name: 📝 Summary
-        run: echo "🏷️ Tag ${{ steps.auto_tag.outputs.tagName }} created for merge of ${{ steps.auto_tag.outputs.branchName }} into ${{ steps.auto_tag.outputs.baseRef }} at ${{ steps.auto_tag.outputs.date }}-${{ steps.auto_tag.outputs.time }}"
+        run: echo "🏷️ Tag ${{ steps.auto_tag.outputs.tagName }} created for merge into ${{ steps.auto_tag.outputs.baseRef }} at ${{ steps.auto_tag.outputs.date }}-${{ steps.auto_tag.outputs.time }}"
