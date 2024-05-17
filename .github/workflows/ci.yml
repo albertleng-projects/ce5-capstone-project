@@ -12,27 +12,48 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
-    - name: Checkout code 📦
-      uses: actions/checkout@v4
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python 3.10.14 🐍
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10.14'
+      - name: 🐍 Set up Python 3.10.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.14'
 
-    - name: Install dependencies 📚
-      run: |
-        cd chatbot
-        pip install -r requirements.txt
-        pip install --upgrade langchain
+      - name: 📚 Install dependencies
+        run: |
+          cd chatbot
+          pip install -r requirements.txt
+          pip install --upgrade langchain
 
-    - name: Run unit tests 🧪
-      run: |
-        cd chatbot
-        pytest tests/
+      - name: 🧪 Run unit tests
+        run: |
+          cd chatbot
+          pytest tests/
 
-    - name: Print summary 📝
-      run: |
-        echo "✅ Checkout code"
-        echo "✅ Install dependencies"
-        echo "✅ Run unit tests"
+      - name: 📝 Print summary
+        run: |
+          echo "✅ Checkout code"
+          echo "✅ Install dependencies"
+          echo "✅ Run unit tests"
+
+  codacy-security-scan:
+    needs: build
+    name: 🛡️ Codacy Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🕵️‍♀️ Run Codacy Analysis CLI
+        uses: codacy/codacy-analysis-cli-action@master
+        with:
+          output: results.sarif
+          format: sarif
+          gh-code-scanning-compat: true
+          max-allowed-issues: 2147483647
+
+      - name: 📤 Upload SARIF results file
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: results.sarif
