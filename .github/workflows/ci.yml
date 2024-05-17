@@ -19,7 +19,7 @@ permissions:
   statuses: write
 
 jobs:
-  build:
+  test_chatbot:
     runs-on: ubuntu-latest
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
