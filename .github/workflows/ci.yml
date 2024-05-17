@@ -51,7 +51,7 @@ jobs:
           echo "✅ Run unit tests"
 
   codacy-security-scan:
-    needs: build
+    needs: test_chatbot
     name: 🛡️ Codacy Security Scan
     runs-on: ubuntu-latest
     steps:
