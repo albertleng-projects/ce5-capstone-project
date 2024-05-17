@@ -5,6 +5,19 @@ on:
     branches:
       - develop
 
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  actions: write
+  checks: write
+  deployments: write
+  issues: write
+  discussions: write
+  repository-projects: write
+  security-events: write
+  statuses: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
