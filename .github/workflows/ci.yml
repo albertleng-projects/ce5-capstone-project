@@ -92,7 +92,6 @@ jobs:
 
       - name: 🎨 Format code with black
         run: black --check chatbot/
-        continue-on-error: true # TODO: Fix me
 
       - name: 🔒 Security check with bandit
         run: bandit -r chatbot/
