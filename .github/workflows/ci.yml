@@ -20,7 +20,8 @@ permissions:
 
 jobs:
   test_chatbot:
-    runs-on: ubuntu-latest
+    name: 🤖 Test Chatbot
+    runs-on: ubuntu-20.04
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
@@ -28,10 +29,10 @@ jobs:
       - name: 📦 Checkout code
         uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python 3.10.4
+      - name: 🐍 Set up Python 3.10.0
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10.4'
+          python-version: '3.10.0'
 
       - name: 📚 Install dependencies
         run: |
@@ -53,7 +54,7 @@ jobs:
   codacy-security-scan:
     needs: test_chatbot
     name: 🛡️ Codacy Security Scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -74,16 +75,16 @@ jobs:
   quality-checks:
     needs: codacy-security-scan
     name: 🔍 Quality Checks with Bandit, Black, Pylint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - name: 📥 Check out code
         uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python 3.10.4
+      - name: 🐍 Set up Python 3.10.0
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10.4'
+          python-version: '3.10.0'
 
       - name: 📦 Install dependencies
         run: |
