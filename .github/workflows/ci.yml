@@ -42,7 +42,7 @@ jobs:
       - name: 🧪 Run unit tests
         run: |
           cd chatbot
-          pytest tests/
+          pytest -p no:warnings tests/
 
       - name: 📝 Print summary
         run: |

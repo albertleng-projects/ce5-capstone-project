@@ -34,10 +34,9 @@ Welcome to our custom Q&A chatbot, a sophisticated tool powered by OpenAI, LangC
 
 ## 🌐 Create a virtual environment & activate the virtual environment (Optional) :
 
-```
+```bash
 python -m venv env
 source env/bin/activate
-
 ```
 
 ## 🏗️ Installation:
@@ -46,33 +45,40 @@ source env/bin/activate
 `Note: This project was developed and tested using Python 3.10.0.` 
 
 
-```
+```bash
 pip install -r requirements.txt
-pip install --upgrade langchain
 ```
 
 ## [🔑 Get an API key](https://platform.openai.com/account/api-keys)
 ### Set the key as an environment variable:
 
-`export OPENAI_API_KEY='your_openai_api_key'`
+```bash
+export OPENAI_API_KEY='your_openai_api_key'
+```
 
 .env file:
 
-```
+```bash
 OPENAI_API_KEY=[your_openai_api_key]
 ```
 
 ## 📝 Run unit tests:
 
-`pytest tests/`
+```bash
+pytest tests/
+```
 
 or run by ignoring warnings
 
-`pytest -p no:warnings tests/`
+```bash
+pytest -p no:warnings tests/
+```
 
 ## ▶️ start streamlit app on localhost:8501:
 
-`streamlit run app/app.py`
+```bash
+streamlit run app/app.py
+```
 
 ## 🌐 Access App:
 
@@ -85,12 +91,12 @@ This opens the app in your browser. Have fun! 😎
 ## 🐳 Alternatively, using Docker:
 ### Build the container image:
 
-```
+```bash
 docker build -t my-app .
 ```
 
 ### Run the container:
 
-```
+```bash
 docker run -p 8501:8501 -e OPENAI_API_KEY=<openai_api_key> my-app
 ```   
