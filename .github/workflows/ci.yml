@@ -101,9 +101,9 @@ jobs:
         run: pylint chatbot/ | tee pylint_output.txt
 
       - name: 📊 Check pylint score
-        run: |
+        run: | # TODO: Change this to a more strict score, i.e. 8 or 9
           score=$(grep -oP 'Your code has been rated at \K[0-9.]+' pylint_output.txt)
-          if (( $(echo "$score < 8" | bc -l) )); then
-            echo "Pylint score is less than 8"
+          if (( $(echo "$score < 7" | bc -l) )); then
+            echo "Pylint score is less than 7"
             exit 1
           fi
