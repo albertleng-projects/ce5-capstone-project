@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   auto_tag_job:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true && (github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == 'develop' || github.event.pull_request.base.ref == 'staging')
     steps:
       - name: 📥 Checkout code
