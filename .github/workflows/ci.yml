@@ -71,8 +71,64 @@ jobs:
         with:
           sarif_file: results.sarif
 
+  trivy-docker-image-scan:
+    name: 🐳 Trivy Docker Image Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🏗️ Build Docker image
+        run: docker build -t my-app .
+
+      - name: 🛡️ Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'my-app'
+          format: 'template'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'HIGH,CRITICAL'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+
+      - name: 📤 Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+# TODO: Add Snyk scan in future
+#  snyk_scan:
+#    name: 🔍 Snyk Code Security Check
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: 📥 Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: 🐍 Set up Python 3.10.14
+#        uses: actions/setup-python@v5
+#        with:
+#          python-version: '3.10.14'
+#
+#      - name: 📚 Install dependencies
+#        run: |
+#          cd chatbot
+#          pip install -r requirements.txt
+#
+#      - name: 🛡️ Run Snyk to check for vulnerabilities
+#        uses: snyk/actions/python@master
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#
+#      - name: 📤 Upload Snyk scan results
+#        uses: github/codeql-action/upload-sarif@main
+#        with:
+#          sarif_file: 'snyk-results.sarif'
+
+
   quality-checks:
-    needs: codacy-security-scan
+    needs: [codacy-security-scan, trivy-docker-image-scan]
     name: 🔍 Quality Checks with Bandit, Black, Pylint
     runs-on: ubuntu-latest
 
