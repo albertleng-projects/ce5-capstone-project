@@ -1,6 +1,10 @@
 import unittest
-from chatbot.app.bot_logic import (load_documents, load_embeddings,
-                                   generate_response, query)
+from chatbot.app.bot_logic import (
+    load_documents,
+    load_embeddings,
+    generate_response,
+    query,
+)
 
 DOCUMENT_PATH = "../app/docs/faq_abc.txt"
 
@@ -33,5 +37,5 @@ class TestBotLogic(unittest.TestCase):
         self.assertTrue(isinstance(response, str))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

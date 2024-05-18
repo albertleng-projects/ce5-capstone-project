@@ -67,10 +67,10 @@ def generate_response(retriever: Chroma, user_input: str) -> str:
     # representing the context and question.
     # create the prompt
     chain = (
-            {"context": retriever, "question": RunnablePassthrough()}
-            | chat_prompt_template
-            | model
-            | StrOutputParser()
+        {"context": retriever, "question": RunnablePassthrough()}
+        | chat_prompt_template
+        | model
+        | StrOutputParser()
     )
     return chain.invoke(user_input)
 
