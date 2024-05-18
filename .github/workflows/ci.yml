@@ -21,7 +21,7 @@ permissions:
 jobs:
   test_chatbot:
     name: 🤖 Test Chatbot
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu22/20240514.2
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
@@ -54,7 +54,7 @@ jobs:
   codacy-security-scan:
     needs: test_chatbot
     name: 🛡️ Codacy Security Scan
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu22/20240514.2
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -75,7 +75,7 @@ jobs:
   quality-checks:
     needs: codacy-security-scan
     name: 🔍 Quality Checks with Bandit, Black, Pylint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu22/20240514.2
 
     steps:
       - name: 📥 Check out code
