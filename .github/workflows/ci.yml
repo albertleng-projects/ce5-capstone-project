@@ -127,7 +127,7 @@ jobs:
 
       - name: 🔒 Security check with bandit
         run: |
-          output=$(bandit -r chatbot/ -f json)
+          output=$(bandit -r chatbot/ -f json | tr -d '\000-\031')
           high_severity_issues=$(echo $output | jq '.results[] | select(.issue_severity=="HIGH")')
           if [ -n "$high_severity_issues" ]; then
             echo "⚠️ High severity issues found:"
