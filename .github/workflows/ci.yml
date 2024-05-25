@@ -41,6 +41,7 @@ jobs:
 
       - name: 🧪 Run unit tests
         run: |
+          export PYTHONPATH="${PYTHONPATH}:./app:./tests"
           cd chatbot
           pytest -p no:warnings tests/
 
@@ -51,7 +52,6 @@ jobs:
           echo "✅ Run unit tests"
 
   codacy-security-scan:
-    needs: test_chatbot
     name: 🛡️ Codacy Security Scan
     runs-on: ubuntu-latest
     steps:
@@ -79,7 +79,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🏗️ Build Docker image
-        run:  |
+        run: |
           cd chatbot
           docker build -t my-app .
 
@@ -100,37 +100,8 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
 
-# TODO: Add Snyk scan in future
-#  snyk_scan:
-#    name: 🔍 Snyk Code Security Check
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: 📥 Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: 🐍 Set up Python 3.10.14
-#        uses: actions/setup-python@v5
-#        with:
-#          python-version: '3.10.14'
-#
-#      - name: 📚 Install dependencies
-#        run: |
-#          cd chatbot
-#          pip install -r requirements.txt
-#
-#      - name: 🛡️ Run Snyk to check for vulnerabilities
-#        uses: snyk/actions/python@master
-#        env:
-#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-#
-#      - name: 📤 Upload Snyk scan results
-#        uses: github/codeql-action/upload-sarif@main
-#        with:
-#          sarif_file: 'snyk-results.sarif'
-
-
   quality-checks:
-    needs: [codacy-security-scan, trivy-docker-image-scan]
+    needs: [ codacy-security-scan, trivy-docker-image-scan ]
     name: 🔍 Quality Checks with Bandit, Black, Pylint
     runs-on: ubuntu-latest
 
@@ -151,16 +122,30 @@ jobs:
       - name: 🎨 Format code with black
         run: black --check chatbot/
 
+      - name: ⚙️ Install jq
+        run: sudo apt-get install jq
+
       - name: 🔒 Security check with bandit
-        run: bandit -r chatbot/
+        run: |
+          output=$(bandit -r chatbot/ -f json | tr -d '\000-\031')
+          high_severity_issues=$(echo $output | jq '.results[] | select(.issue_severity=="HIGH")')
+          if [ -n "$high_severity_issues" ]; then
+            echo "⚠️ High severity issues found:"
+            echo $high_severity_issues
+            exit 1
+          else
+            echo "✅ Bandit security check passed with no high severity issues."
+          fi
 
       - name: 🧹 Lint with pylint
-        run: pylint chatbot/ | tee pylint_output.txt
+        run: |
+          export PYTHONPATH="${PYTHONPATH}:./chatbot/app:./chatbot/tests"
+          pylint chatbot/ | tee pylint_output.log
 
       - name: 📊 Check pylint score
-        run: | # TODO: Change this to a more strict score, i.e. 8 or 9
-          score=$(grep -oP 'Your code has been rated at \K[0-9.]+' pylint_output.txt)
-          if (( $(echo "$score < 7" | bc -l) )); then
-            echo "Pylint score is less than 7"
+        run: |
+          score=$(grep -oP 'Your code has been rated at \K[0-9.]+' pylint_output.log)
+          if (( $(echo "$score < 9" | bc -l) )); then
+            echo "Pylint score is less than 9"
             exit 1
           fi
