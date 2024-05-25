@@ -305,4 +305,6 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-Scratches/
+Scratches
+.secrets
+bin
