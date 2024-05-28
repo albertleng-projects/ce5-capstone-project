@@ -34,6 +34,6 @@ jobs:
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.PAT }} # You need to set this Personal Access Token in your secrets
+          token: ${{ secrets.PAT }}
           repository: ${{ github.repository }}
           event-type: branch-rules-checked
