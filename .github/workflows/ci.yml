@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      PYTHONPATH: ${{ github.workspace }}/chatbot/app:${{ github.workspace }}/chatbot/tests
 
     steps:
       - name: 📦 Checkout code
@@ -44,7 +45,6 @@ jobs:
 
       - name: 🧪 Run unit tests
         run: |
-          export PYTHONPATH="${PYTHONPATH}:./app:./tests"
           cd chatbot
           pytest -p no:warnings tests/
 
@@ -62,7 +62,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🕵️‍♀️ Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@master
+        uses: codacy/codacy-analysis-cli-action@4.4.0
         with:
           output: results.sarif
           format: sarif
@@ -142,7 +142,6 @@ jobs:
 
       - name: 🧹 Lint with pylint
         run: |
-          export PYTHONPATH="${PYTHONPATH}:./chatbot/app:./chatbot/tests"
           pylint chatbot/ | tee pylint_output.log
 
       - name: 📊 Check pylint score
