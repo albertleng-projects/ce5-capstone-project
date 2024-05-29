@@ -159,7 +159,7 @@ def query(user_input: str) -> str:
     """
     logger.info("User input: %s", user_input)
     logger.info("Loading documents")
-    documents = load_documents("./docs/faq_abc.txt")
+    documents = load_documents("./docs/faq_albert_shoes.txt")
     logger.info("Loading embeddings")
     retriever = load_embeddings(documents)
     logger.info("Generating response")

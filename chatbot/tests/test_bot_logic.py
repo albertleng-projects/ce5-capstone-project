@@ -14,7 +14,7 @@ from chatbot.app.bot_logic import (
     query,
 )
 
-DOCUMENT_PATH = "../app/docs/faq_abc.txt"
+DOCUMENT_PATH = "../app/docs/faq_albert_shoes.txt"
 
 
 class TestBotLogic(unittest.TestCase):
