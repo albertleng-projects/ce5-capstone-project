@@ -62,7 +62,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🕵️‍♀️ Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@4.4.0
+        uses: codacy/codacy-analysis-cli-action@v4.4.0
         with:
           output: results.sarif
           format: sarif
