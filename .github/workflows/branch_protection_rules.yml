@@ -1,0 +1,39 @@
+# .github/workflows/validate_pr_source_branch.yml
+name: 🛡️ Validate PR Source Branch Name
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - staging
+      - main
+
+jobs:
+  check:
+    name: 𓆱 Validate PR Source Branch Name
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🧪 Validate branch name
+        run: |
+          PR_BRANCH=${{ github.head_ref }}
+          TARGET_BRANCH=${{ github.base_ref }}
+          if [[ "$TARGET_BRANCH" == "develop" && ("$PR_BRANCH" == feature/* || "$PR_BRANCH" == bugfix/*) ]]; then
+            echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
+          elif [[ "$TARGET_BRANCH" == "staging" && "$PR_BRANCH" == "develop" ]]; then
+            echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
+          elif [[ "$TARGET_BRANCH" == "main" && "$PR_BRANCH" == "staging" ]]; then
+            echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
+          else
+            echo "❌ Invalid source branch ($PR_BRANCH) for merging into '$TARGET_BRANCH'. Check branch protection rules." >&2
+            exit 1
+          fi
+  trigger-ci:
+    needs: [ check ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ github.repository }}
+          event-type: branch-rules-checked

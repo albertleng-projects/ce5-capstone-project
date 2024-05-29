@@ -1,6 +1,9 @@
+# .github/workflows/ci.yml
 name: CI
 
 on:
+  repository_dispatch:
+    types: [ branch-rules-checked ]
   pull_request:
     branches:
       - develop
