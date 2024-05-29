@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      PYTHONPATH: ${{ github.workspace }}/chatbot/app:${{ github.workspace }}/chatbot/tests
 
     steps:
       - name: 📦 Checkout code
@@ -44,7 +45,6 @@ jobs:
 
       - name: 🧪 Run unit tests
         run: |
-          export PYTHONPATH="${PYTHONPATH}:./app:./tests"
           cd chatbot
           pytest -p no:warnings tests/
 
@@ -62,7 +62,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🕵️‍♀️ Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@master
+        uses: codacy/codacy-analysis-cli-action@v4.4.0
         with:
           output: results.sarif
           format: sarif
@@ -107,6 +107,8 @@ jobs:
     needs: [ codacy-security-scan, trivy-docker-image-scan ]
     name: 🔍 Quality Checks with Bandit, Black, Pylint
     runs-on: ubuntu-latest
+    env:
+      MINIMUM_PYLINT_SCORE: 8
 
     steps:
       - name: 📥 Check out code
@@ -142,13 +144,14 @@ jobs:
 
       - name: 🧹 Lint with pylint
         run: |
-          export PYTHONPATH="${PYTHONPATH}:./chatbot/app:./chatbot/tests"
           pylint chatbot/ | tee pylint_output.log
 
       - name: 📊 Check pylint score
         run: |
           score=$(grep -oP 'Your code has been rated at \K[0-9.]+' pylint_output.log)
-          if (( $(echo "$score < 9" | bc -l) )); then
-            echo "Pylint score is less than 9"
+          if (( $(echo "$score < $MINIMUM_PYLINT_SCORE" | bc -l) )); then
+            echo "❌ Pylint score is less than $MINIMUM_PYLINT_SCORE"
             exit 1
+          else
+            echo "✅ Pylint score $score is greater than or equal to $MINIMUM_PYLINT_SCORE"
           fi
