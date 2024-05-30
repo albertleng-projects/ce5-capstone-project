@@ -5,7 +5,7 @@ It tests the API endpoints to ensure they are working as expected.
 
 import unittest
 from unittest.mock import patch
-import api.sentiment_analysis_api as api
+import api.app.sentiment_analysis_api as api
 
 
 class TestSentimentAnalysisAPI(unittest.TestCase):
@@ -20,12 +20,14 @@ class TestSentimentAnalysisAPI(unittest.TestCase):
         self.app = api.app
         self.client = self.app.test_client()
 
-    @patch("api.sentiment_analysis_api.comprehend.detect_sentiment")
-    @patch("api.sentiment_analysis_api.comprehend.detect_dominant_language")
-    @patch("api.sentiment_analysis_api.table.put_item")
+    @patch("api.app.sentiment_analysis_api.comprehend.detect_sentiment")
+    @patch("api.app.sentiment_analysis_api.comprehend.detect_dominant_language")
+    @patch("api.app.sentiment_analysis_api.table.put_item")
     def test_post_user_query(
-            self, mock_put_item, mock_detect_dominant_language,  # noqa
-            mock_detect_sentiment
+        self,
+        mock_put_item,
+        mock_detect_dominant_language,  # noqa
+        mock_detect_sentiment,
     ):
         """
         Tests the post_user_query function from the sentiment_analysis_api
@@ -44,7 +46,7 @@ class TestSentimentAnalysisAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json()["status"], "Success")
 
-    @patch("api.sentiment_analysis_api.table.scan")
+    @patch("api.app.sentiment_analysis_api.table.scan")
     def test_get_user_queries(self, mock_scan):
         """
         Tests the get_user_queries function from the sentiment_analysis_api
@@ -56,7 +58,7 @@ class TestSentimentAnalysisAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json()["total"], 0)
 
-    @patch("api.sentiment_analysis_api.table.get_item")
+    @patch("api.app.sentiment_analysis_api.table.get_item")
     def test_get_user_query_found(self, mock_get_item):
         """
         Tests the get_user_query function from the sentiment_analysis_api module.
@@ -79,7 +81,7 @@ class TestSentimentAnalysisAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json()["id"], "123")
 
-    @patch("api.sentiment_analysis_api.table.get_item")
+    @patch("api.app.sentiment_analysis_api.table.get_item")
     def test_get_user_query_not_found(self, mock_get_item):
         """
         Tests the get_user_query function from the sentiment_analysis_api module.

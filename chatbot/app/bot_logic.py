@@ -119,7 +119,7 @@ def load_embeddings(documents: List[Document]) -> Chroma:
         Chroma: Vector store object.
     """
     logger.debug("Creating vector store from %d documents", len(documents))
-    db = Chroma.from_documents(documents, OpenAIEmbeddings())  # noqa
+    db = Chroma.from_documents(documents, OpenAIEmbeddings())
 
     return db.as_retriever()
 

@@ -7,7 +7,9 @@ application's activities.
 """
 
 import os
+from typing import Optional
 import logging
+import requests
 import streamlit as st
 import openai
 from dotenv import load_dotenv
@@ -22,12 +24,38 @@ MODEL_ENGINE = "gpt-3.5-turbo"
 LOGGING_LEVEL = (
     os.getenv("LOGGING_LEVEL") if os.getenv("LOGGING_LEVEL") else logging.DEBUG
 )
+SENTIMENT_API_BASE_URL = os.getenv("SENTIMENT_API_BASE_URL", "http://localhost:5000")
+
 script_name = os.path.splitext(os.path.basename(__file__))[0]
 
 logger = setup_logger(script_name, LOGGING_LEVEL)
 
-st.title("👠 ABC Shoes Chatbot App")
+st.title("👠 Albert Shoes Chatbot App")
 chat_placeholder = st.empty()
+
+
+def call_sentiment_analysis_api(prompt: str) -> Optional[dict]:
+    """
+    Makes a POST request to the sentiment analysis API with the user's prompt.
+
+    Args:
+        prompt (str): The user's prompt.
+
+    Returns:
+        dict or None: The response from the sentiment analysis API or None if
+        there's an exception.
+    """
+    url = f"{SENTIMENT_API_BASE_URL}/api/v1/user_query"
+
+    try:
+        logger.info("Making a request to the sentiment analysis API")
+        logger.debug("Request URL: %s and user_query: %s", url, prompt)
+        response = requests.post(url, json={"text": prompt}, timeout=5)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        logger.error("Failed to make a request to the sentiment analysis API: %s", e)
+        return None
 
 
 def init_chat_history() -> None:
@@ -80,6 +108,10 @@ def start_chat() -> None:
 
         response = query(prompt)
         logger.info("Assistant response: %s", response)
+
+        logger.info("Calling sentiment analysis API")
+        sentiment_analysis_response = call_sentiment_analysis_api(prompt)
+        logger.debug("Sentiment analysis response: %s", sentiment_analysis_response)
 
         with st.chat_message("assistant"):
             logger.debug("Adding assistant response via st.markdown: %s", response)
