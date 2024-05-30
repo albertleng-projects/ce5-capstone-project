@@ -72,8 +72,7 @@ class TestApp(unittest.TestCase):
             "Making a request to the sentiment analysis API"
         )
         mock_logger.debug.assert_called_with(
-            "Request URL: %s and user_query: %s", mock_post.call_args[0][0],
-            prompt
+            "Request URL: %s and user_query: %s", mock_post.call_args[0][0], prompt
         )
 
     @patch("chatbot.app.app.requests.post")
@@ -106,8 +105,7 @@ class TestApp(unittest.TestCase):
             "Making a request to the sentiment analysis API"
         )
         mock_logger.debug.assert_called_with(
-            "Request URL: %s and user_query: %s", mock_post.call_args[0][0],
-            prompt
+            "Request URL: %s and user_query: %s", mock_post.call_args[0][0], prompt
         )
         mock_logger.error.assert_called_once()
 

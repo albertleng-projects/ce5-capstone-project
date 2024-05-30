@@ -24,7 +24,8 @@ MODEL_ENGINE = "gpt-3.5-turbo"
 LOGGING_LEVEL = (
     os.getenv("LOGGING_LEVEL") if os.getenv("LOGGING_LEVEL") else logging.DEBUG
 )
-SENTIMENT_API_BASE_URL = os.getenv("SENTIMENT_API_BASE_URL", "http://localhost:5000")
+SENTIMENT_API_BASE_URL = os.getenv("SENTIMENT_API_BASE_URL",
+                                   "http://localhost:5000")
 
 script_name = os.path.splitext(os.path.basename(__file__))[0]
 
@@ -50,7 +51,7 @@ def call_sentiment_analysis_api(prompt: str) -> Optional[dict]:
     try:
         logger.info("Making a request to the sentiment analysis API")
         logger.debug("Request URL: %s and user_query: %s", url, prompt)
-        response = requests.post(url, json={"text": prompt}, timeout=5)
+        response = requests.post(url, json={"text": prompt}, timeout=3)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
