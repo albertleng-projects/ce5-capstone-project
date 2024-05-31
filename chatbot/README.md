@@ -92,11 +92,11 @@ This opens the app in your browser. Have fun! 😎
 ### Build the container image:
 
 ```bash
-docker build -t my-app .
+docker build -t chatbot-app .
 ```
 
 ### Run the container:
 
 ```bash
-docker run -p 8501:8501 -e OPENAI_API_KEY=<openai_api_key> my-app
+docker run -p 8501:8501 -e OPENAI_API_KEY=<openai_api_key> chatbot-app
 ```   
