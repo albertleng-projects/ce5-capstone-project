@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      PYTHONPATH: ${{ github.workspace }}/chatbot/app:${{ github.workspace }}/chatbot/tests${{ github.workspace }}/api/app:${{ github.workspace }}/api/tests
+      PYTHONPATH: ${{ github.workspace }}/chatbot/app:${{ github.workspace }}/chatbot/tests:${{ github.workspace }}/api/app:${{ github.workspace }}/api/tests
 
     steps:
       - name: 📦 Checkout code
