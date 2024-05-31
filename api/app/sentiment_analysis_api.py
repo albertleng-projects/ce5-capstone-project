@@ -23,16 +23,6 @@ Environment variables:
     AWS_ACCESS_KEY_ID: The AWS access key ID for accessing AWS services.
     AWS_SECRET_ACCESS_KEY: The AWS secret access key for accessing AWS services.
     LOGGING_LEVEL: The logging level for the logger. Defaults to logging.DEBUG.
-
-TODOs:
-    1. Add unit tests
-    2. Add containerizations
-        - dockerfile
-        - dockerignore
-    3. Add CI/CD
-    4. Add calls from Chatbot app
-    5. Find out proper practise for production server
-    6. Add README.md
 """
 
 import os
@@ -101,6 +91,8 @@ AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 LOGGING_LEVEL = (
     os.getenv("LOGGING_LEVEL") if os.getenv("LOGGING_LEVEL") else logging.DEBUG
 )
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
 
 script_name = os.path.splitext(os.path.basename(__file__))[0]
 logger = setup_logger(script_name, logging.DEBUG)
@@ -281,4 +273,4 @@ def get_user_query(user_query_id):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=DEBUG)
