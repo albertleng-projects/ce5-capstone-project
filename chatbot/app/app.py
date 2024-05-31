@@ -24,8 +24,7 @@ MODEL_ENGINE = "gpt-3.5-turbo"
 LOGGING_LEVEL = (
     os.getenv("LOGGING_LEVEL") if os.getenv("LOGGING_LEVEL") else logging.DEBUG
 )
-SENTIMENT_API_BASE_URL = os.getenv("SENTIMENT_API_BASE_URL",
-                                   "http://localhost:5000")
+SENTIMENT_API_BASE_URL = os.getenv("SENTIMENT_API_BASE_URL", "http://localhost:5000")
 
 script_name = os.path.splitext(os.path.basename(__file__))[0]
 
