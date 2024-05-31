@@ -110,11 +110,6 @@ jobs:
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results-chatbot.sarif'
 
-      - name: 📤 Upload Trivy scan results for Chatbot 🤖
-        uses: github/codeql-action/upload-sarif@main
-        with:
-          sarif_file: 'trivy-results-chatbot.sarif'
-
       - name: 🏗️ Build Docker image for Sentiment Analysis API 📊
         run: |
           cd api
@@ -132,6 +127,19 @@ jobs:
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results-api.sarif'
 
+  upload-trivy-results-chatbot:
+    needs: trivy-docker-images-scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📤 Upload Trivy scan results for Chatbot 🤖
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: 'trivy-results-chatbot.sarif'
+
+  upload-trivy-results-api:
+    needs: trivy-docker-images-scan
+    runs-on: ubuntu-latest
+    steps:
       - name: 📤 Upload Trivy scan results for Sentiment Analysis API 📊
         uses: github/codeql-action/upload-sarif@main
         with:
