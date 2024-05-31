@@ -86,8 +86,8 @@ jobs:
         with:
           sarif_file: results.sarif
 
-  trivy-docker-images-scan:
-    name: 🐳 Trivy Docker Images Scan
+  trivy-chatbot-docker-image-scan:
+    name: 🐳 Trivy Chatbot Docker Image 🤖 Scan
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout code
@@ -110,6 +110,19 @@ jobs:
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results-chatbot.sarif'
 
+      - name: 📤 Upload Trivy scan results for Chatbot 🤖
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: 'trivy-results-chatbot.sarif'
+
+
+  trivy-api-docker-image-scan:
+    name: 🐳 Trivy Sentiment Analysis API 📊Docker Image Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
       - name: 🏗️ Build Docker image for Sentiment Analysis API 📊
         run: |
           cd api
@@ -127,26 +140,13 @@ jobs:
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results-api.sarif'
 
-  upload-trivy-results-chatbot:
-    needs: trivy-docker-images-scan
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📤 Upload Trivy scan results for Chatbot 🤖
-        uses: github/codeql-action/upload-sarif@main
-        with:
-          sarif_file: 'trivy-results-chatbot.sarif'
-
-  upload-trivy-results-api:
-    needs: trivy-docker-images-scan
-    runs-on: ubuntu-latest
-    steps:
       - name: 📤 Upload Trivy scan results for Sentiment Analysis API 📊
         uses: github/codeql-action/upload-sarif@main
         with:
           sarif_file: 'trivy-results-api.sarif'
 
   quality-checks:
-    needs: [ codacy-security-scan, trivy-docker-images-scan, test-services ]
+    needs: [ codacy-security-scan, trivy-chatbot-docker-image-scan, trivy-api-docker-image-scan, test-services ]
     name: 🔍 Quality Checks with Bandit, Black, Pylint
     runs-on: ubuntu-latest
     env:
