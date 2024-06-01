@@ -19,8 +19,6 @@ timestamp in a DynamoDB table. It also logs these activities.
 - AWS Comprehend
 - AWS DynamoDB
 
-Sure, here's how you can add an `Installation` section to your `README.md`:
-
 ## ⚙️ Installation
 
 Before you can run the Sentiment Analysis API, you need to install the necessary

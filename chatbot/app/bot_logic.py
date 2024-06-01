@@ -47,7 +47,7 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 LANGUAGE_MODEL = "gpt-3.5-turbo-instruct"
 LOGGING_LEVEL = (
-    os.getenv("LOGGING_LEVEL") if os.getenv("LOGGING_LEVEL") else logging.DEBUG
+    int(os.getenv("LOGGING_LEVEL")) if os.getenv("LOGGING_LEVEL") else logging.DEBUG
 )
 script_name = os.path.splitext(os.path.basename(__file__))[0]
 

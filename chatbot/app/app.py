@@ -22,7 +22,7 @@ API_KEY = os.getenv("OPENAI_API_KEY")
 openai.api_key = API_KEY
 MODEL_ENGINE = "gpt-3.5-turbo"
 LOGGING_LEVEL = (
-    os.getenv("LOGGING_LEVEL") if os.getenv("LOGGING_LEVEL") else logging.DEBUG
+    int(os.getenv("LOGGING_LEVEL")) if os.getenv("LOGGING_LEVEL") else logging.DEBUG
 )
 SENTIMENT_API_BASE_URL = os.getenv("SENTIMENT_API_BASE_URL", "http://localhost:5000")
 
