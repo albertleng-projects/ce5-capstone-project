@@ -37,7 +37,7 @@ resource "kubernetes_deployment" "chatbot" {
 
       spec {
         container {
-          image = "your-account-id.dkr.ecr.region.amazonaws.com/chatbot-app:latest"
+          image = "255945442255.dkr.ecr.region.amazonaws.com/chatbot-app:latest"
           name  = "chatbot"
         }
       }
@@ -68,7 +68,7 @@ resource "kubernetes_deployment" "sentiment_analysis" {
 
       spec {
         container {
-          image = "your-account-id.dkr.ecr.region.amazonaws.com/sentiment-analysis-api:latest"
+          image = "255945442255.dkr.ecr.region.amazonaws.com/sentiment-analysis-api:latest"
           name  = "sentiment-analysis"
         }
       }
