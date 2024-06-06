@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatbot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chatbot
+  template:
+    metadata:
+      labels:
+        app: chatbot
+    spec:
+      containers:
+        - name: chatbot
+          image: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce5-group6-ecr:chatbot-app-latest
+          ports:
+            - containerPort: 8501
