@@ -37,7 +37,9 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve
         working-directory: ./terraform
-  #        TODO: Set secrets.KUBECONFIG with the output of terraform apply
+      #        TODO: Set secrets.KUBECONFIG with the output of terraform apply
+      - name: List contents of terraform directory
+        run: ls -la ./terraform
 
   build_and_push:
     needs: [ terraform ]
@@ -142,6 +144,9 @@ jobs:
           sed -i 's/PLACEHOLDER_OPENAI_API_KEY/'$(yq e .OPENAI_API_KEY secrets.dec.yaml)'/g' values.yaml
           sed -i 's/PLACEHOLDER_AWS_ACCESS_KEY_ID/'$(yq e .AWS_ACCESS_KEY_ID secrets.dec.yaml)'/g' values.yaml
           sed -i 's/PLACEHOLDER_AWS_SECRET_ACCESS_KEY/'$(yq e .AWS_SECRET_ACCESS_KEY secrets.dec.yaml)'/g' values.yaml
+
+      - name: List contents of terraform directory
+        run: ls -la ./terraform
 
       - name: Deploy Helm chart
         env:
