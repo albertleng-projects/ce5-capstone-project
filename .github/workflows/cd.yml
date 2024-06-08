@@ -111,15 +111,18 @@ jobs:
       - name: Set environment variable
         run: echo "ENVIRONMENT=$(yq e .environment helm/values.yaml)" >> $GITHUB_ENV
 
-      - name: Create namespace
-        run: kubectl create namespace $ENVIRONMENT
-
       - name: Show current directory and Kubernetes context
         run: |
           echo "Current directory:"
           pwd
           echo "Current Kubernetes context:"
           kubectl config current-context
+
+      - name: Create namespace if not exists
+        run: |
+          if ! kubectl get namespace $ENVIRONMENT; then
+            kubectl create namespace $ENVIRONMENT
+          fi
 
       - name: Import GPG key
         env:
