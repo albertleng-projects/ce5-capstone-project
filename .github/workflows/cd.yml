@@ -38,8 +38,18 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ./terraform
       #        TODO: Set secrets.KUBECONFIG with the output of terraform apply
-      - name: List contents of terraform directory
-        run: ls -la ./terraform
+
+      - name: Display kubeconfig
+        run: cat ./terraform/kubeconfig_ce5-group6-eks-cluster
+
+      - name: Set KUBECONFIG environment variable
+        id: set_kubeconfig
+        run: |
+          echo "KUBECONFIG=$GITHUB_WORKSPACE/terraform/kubeconfig_ce5-group6-eks-cluster" >> $GITHUB_ENV
+          echo "::set-output name=kubeconfig_path::$GITHUB_WORKSPACE/terraform/kubeconfig_ce5-group6-eks-cluster"
+
+    outputs:
+      kubeconfig_path: ${{ steps.set_kubeconfig.outputs.kubeconfig_path }}
 
   build_and_push:
     needs: [ terraform ]
@@ -67,6 +77,8 @@ jobs:
   deploy_albert_shoes_chatbot:
     needs: [ build_and_push ]
     runs-on: ubuntu-latest
+    env:
+      KUBECONFIG: ${{ needs.terraform.outputs.kubeconfig_path }}
 
     steps:
       - name: Checkout
@@ -145,12 +157,7 @@ jobs:
           sed -i 's/PLACEHOLDER_AWS_ACCESS_KEY_ID/'$(yq e .AWS_ACCESS_KEY_ID secrets.dec.yaml)'/g' values.yaml
           sed -i 's/PLACEHOLDER_AWS_SECRET_ACCESS_KEY/'$(yq e .AWS_SECRET_ACCESS_KEY secrets.dec.yaml)'/g' values.yaml
 
-      - name: List contents of terraform directory
-        run: ls -la ./terraform
-
       - name: Deploy Helm chart
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
         run: |
           cd helm
           helm install albert-shoes-shop-chatbot .
