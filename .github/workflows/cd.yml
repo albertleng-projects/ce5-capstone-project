@@ -129,6 +129,11 @@ jobs:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import
 
+      - name: Install sops
+        run: |
+          wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops_3.7.1_amd64.deb
+          sudo dpkg -i sops_3.7.1_amd64.deb
+
       - name: Decrypt secrets
         run: helm secrets decrypt helm/secrets.enc.yaml > helm/secrets.dec.yaml
 
