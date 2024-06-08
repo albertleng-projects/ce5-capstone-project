@@ -2,10 +2,6 @@
 name: Terraform and Docker Images Build and Push
 
 on:
-  workflow_run:
-    workflows: [ "🏗 CI" ]
-    types:
-      - completed
   repository_dispatch:
     types: [ branch-rules-checked ]
 
@@ -38,19 +34,6 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve
         working-directory: ./terraform
-
-    strategy:
-      matrix:
-        include:
-          - branch: 'develop'
-            condition: "github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/develop'"
-          - branch: 'staging'
-            condition: "github.ref == 'refs/heads/staging'"
-          - branch: 'main'
-            condition: "github.ref == 'refs/heads/main'"
-
-    if: ${{ fromJSON(matrix.condition) }}
-    name: 'Terraform - ${{ matrix.branch }}'
 
   build_and_push:
     needs: [ terraform ]
