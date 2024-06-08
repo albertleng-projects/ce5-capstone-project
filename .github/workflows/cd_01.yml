@@ -2,8 +2,11 @@
 name: Terraform and Docker Images Build and Push
 
 on:
-  repository_dispatch:
-    types: [ branch-rules-checked ]
+  pull_request:
+    branches:
+      - develop
+      - staging
+      - main
 
 jobs:
   terraform:
