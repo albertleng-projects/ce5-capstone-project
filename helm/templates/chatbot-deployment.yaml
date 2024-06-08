@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: chatbot
-          image: "{{ .Values.images.chatbot.repository }}-{{ .Values.environment}}:{{ .Values.images.tag }}"
+          image: "{{ .Values.images.chatbot.repository }}-{{ .Values.environment }}:{{ .Values.version }}"
           ports:
             - containerPort: 8501
           env:

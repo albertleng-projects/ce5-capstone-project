@@ -1,0 +1,76 @@
+# .github/workflows/cd_01.yml
+name: Terraform and Docker Images Build and Push
+
+on:
+  workflow_run:
+    workflows: [ "🏗 CI" ]
+    types:
+      - completed
+  repository_dispatch:
+    types: [ branch-rules-checked ]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform
+
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: ./terraform
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: ./terraform
+
+    strategy:
+      matrix:
+        include:
+          - branch: 'develop'
+            condition: "github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/develop'"
+          - branch: 'staging'
+            condition: "github.ref == 'refs/heads/staging'"
+          - branch: 'main'
+            condition: "github.ref == 'refs/heads/main'"
+
+    if: ${{ fromJSON(matrix.condition) }}
+    name: 'Terraform - ${{ matrix.branch }}'
+
+  build_and_push:
+    needs: [ terraform ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up shell
+        run: echo "runner:$(id -u -n)" | sudo chpasswd
+
+      - name: Run build_and_push_docker_images.sh
+        run: |
+          sudo chmod +x ./build_and_push_docker_images.sh
+          ./build_and_push_docker_images.sh

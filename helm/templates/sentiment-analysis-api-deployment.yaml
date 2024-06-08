@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: sentiment-analysis-api
-          image: "{{ .Values.images.sentimentAnalysisApi.repository }}-{{ .Values.environment}}:{{ .Values.images.tag }}"
+          image: "{{ .Values.images.sentimentAnalysisApi.repository }}-{{ .Values.environment }}:{{ .Values.version }}"
           ports:
             - containerPort: 5000
           env:

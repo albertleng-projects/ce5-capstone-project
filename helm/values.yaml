@@ -1,4 +1,4 @@
-environment: staging
+environment: develop
 version: 0.0.1
 
 images:
