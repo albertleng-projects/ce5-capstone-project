@@ -109,7 +109,7 @@ jobs:
         run: cd helm
 
       - name: Set environment variable
-        run: echo "ENVIRONMENT=$(yq e .environment values.yaml)" >> $GITHUB_ENV
+        run: echo "ENVIRONMENT=$(yq e .environment helm/values.yaml)" >> $GITHUB_ENV
 
       - name: Create namespace
         run: kubectl create namespace $ENVIRONMENT
