@@ -313,4 +313,4 @@ bin
 
 helm/secret*.yaml
 
-helm/gpg-private*.asc*
+helm/private*.asc*
