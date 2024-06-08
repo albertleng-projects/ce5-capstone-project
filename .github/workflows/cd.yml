@@ -105,9 +105,6 @@ jobs:
           aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ce5-group6-eks-cluster
           #         TODO: fix cluster-name
 
-      - name: Change to helm directory
-        run: cd helm
-
       - name: Set environment variable
         run: echo "ENVIRONMENT=$(yq e .environment helm/values.yaml)" >> $GITHUB_ENV
 
@@ -139,6 +136,7 @@ jobs:
 
       - name: Replace placeholders in values.yaml
         run: |
+          cd helm
           echo "Current directory:"
           pwd
           sed -i 's/PLACEHOLDER_OPENAI_API_KEY/'$(yq e .OPENAI_API_KEY secrets.dec.yaml)'/g' values.yaml
@@ -148,6 +146,8 @@ jobs:
       - name: Deploy Helm chart
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
-        run: helm install albert-shoes-shop-chatbot .
+        run: |
+          cd helm
+          helm install albert-shoes-shop-chatbot .
 
 
