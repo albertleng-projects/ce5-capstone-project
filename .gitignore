@@ -311,4 +311,6 @@ bin
 
 **/kubeconfig_ce5-group6-eks-cluster
 
-helm/secrets.yaml
+helm/secret*.yaml
+
+helm/gpg-private*.asc*
