@@ -308,3 +308,5 @@ terraform.rc
 Scratches
 .secrets
 bin
+
+**/kubeconfig_ce5-group6-eks-cluster

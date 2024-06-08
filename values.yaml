@@ -1,2 +1,3 @@
+# Unify the environment variable values in the `values.yaml` file.
 environment: staging
-version: 1.0.0
+version: 0.0.1

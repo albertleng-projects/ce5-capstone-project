@@ -1,0 +1,53 @@
+environment: staging
+
+images:
+  tag: 0.0.1
+  chatbot:
+    repository: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce5-group6-ecr-chatbot
+  sentimentAnalysisApi:
+    repository: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce5-group6-ecr-api
+
+env:
+  OPENAI_API_KEY: "xxx" # TODO: Resolve with helm-secrets
+  AWS_REGION: "us-east-1"
+  DYNAMODB_TABLE: "ce5-group6-user-queries"
+  AWS_ACCESS_KEY_ID: "xxx" # TODO: Resolve with helm-secrets
+  AWS_SECRET_ACCESS_KEY: "xxx" # TODO: Resolve with helm-secrets
+  SENTIMENT_API_BASE_URL: "http://sentiment-analysis-api-service"
+  # 10 = DEBUG, 20 = INFO, 30 = WARNING, 40 = ERROR, 50 = CRITICAL
+  LOGGING_LEVEL: "10"
+  # Enable debug mode. "True" or "False"
+  DEBUG: "False"
+
+# TODO:
+#In Ubuntu, you can follow similar steps to retrieve the value of `environment` from the `values.yaml` file, set it as an environment variable `ENVIRONMENT_VARIABLE`, and create a namespace in Kubernetes. However, the installation of `yq` is slightly different.
+#
+#Here are the steps:
+#
+#1. Install `yq` if it's not already installed. You can install it using `snap`:
+#
+#```bash
+#sudo snap install yq
+#```
+#
+#2. Parse the `values.yaml` file to get the value of `environment` and store it in a variable:
+#
+#```bash
+#ENVIRONMENT_VARIABLE=$(yq e '.environment' helm/values.yaml)
+#```
+#
+#3. Export the `ENVIRONMENT_VARIABLE`:
+#
+#```bash
+#export ENVIRONMENT_VARIABLE
+#```
+#
+#4. Create a namespace in Kubernetes using the `kubectl create namespace` command:
+#
+#```bash
+#kubectl create namespace $ENVIRONMENT_VARIABLE
+#```
+#
+#This will create a namespace with the name of the value of `environment` from the `values.yaml` file.
+#
+#Please replace `helm/values.yaml` with the actual path to your `values.yaml` file if it's located in a different directory. Also, ensure that you have `kubectl` and `yq` installed on your machine to use these commands.

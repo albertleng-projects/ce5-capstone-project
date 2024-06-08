@@ -1,0 +1,4 @@
+apiVersion: v2
+name: albert-shoes-shop-chatbot
+description: A Helm chart for deploying Albert Shoes Shop Chatbot to Kubernetes
+version: 0.0.1
