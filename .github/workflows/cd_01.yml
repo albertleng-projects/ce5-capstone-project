@@ -9,26 +9,19 @@ on:
       - main
 
 jobs:
-  setup_aws_credentials:
-    runs-on: ubuntu-latest
-    outputs:
-      aws_region: ${{ steps.set_region.outputs.value }}
-    steps:
-      - name: Configure AWS Credentials
-        id: set_region
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
-
   terraform:
-    needs: [ setup_aws_credentials ]
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -46,12 +39,19 @@ jobs:
         working-directory: ./terraform
 
   build_and_push:
-    needs: [ terraform, setup_aws_credentials ]
+    needs: [ terraform ]
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Set up shell
         run: echo "runner:$(id -u -n)" | sudo chpasswd
