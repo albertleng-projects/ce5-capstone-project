@@ -114,16 +114,25 @@ jobs:
       - name: Create namespace
         run: kubectl create namespace $ENVIRONMENT
 
+      - name: Show current directory and Kubernetes context
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Current Kubernetes context:"
+          kubectl config current-context
+
       - name: Import GPG key
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import
 
       - name: Decrypt secrets
-        run: helm secrets decrypt secrets.enc.yaml > secrets.dec.yaml
+        run: helm secrets decrypt helm/secrets.enc.yaml > helm/secrets.dec.yaml
 
       - name: Replace placeholders in values.yaml
         run: |
+          echo "Current directory:"
+          pwd
           sed -i 's/PLACEHOLDER_OPENAI_API_KEY/'$(yq e .OPENAI_API_KEY secrets.dec.yaml)'/g' values.yaml
           sed -i 's/PLACEHOLDER_AWS_ACCESS_KEY_ID/'$(yq e .AWS_ACCESS_KEY_ID secrets.dec.yaml)'/g' values.yaml
           sed -i 's/PLACEHOLDER_AWS_SECRET_ACCESS_KEY/'$(yq e .AWS_SECRET_ACCESS_KEY secrets.dec.yaml)'/g' values.yaml
