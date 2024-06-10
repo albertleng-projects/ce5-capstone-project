@@ -19,9 +19,7 @@ jobs:
           TARGET_BRANCH=${{ github.base_ref }}
           if [[ "$TARGET_BRANCH" == "develop" && ("$PR_BRANCH" == feature/* || "$PR_BRANCH" == bugfix/*) ]]; then
             echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
-          elif [[ "$TARGET_BRANCH" == "staging" && "$PR_BRANCH" == "develop" ]]; then
-            echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
-          elif [[ "$TARGET_BRANCH" == "main" && "$PR_BRANCH" == "staging" ]]; then
+          elif [[ ("$TARGET_BRANCH" == "staging" || "TARGET_BRANCH" == "main") && "$PR_BRANCH" == "develop" ]]; then
             echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
           else
             echo "❌ Invalid source branch ($PR_BRANCH) for merging into '$TARGET_BRANCH'. Check branch protection rules." >&2
