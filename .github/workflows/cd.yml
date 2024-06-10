@@ -133,9 +133,10 @@ jobs:
 
       - name: Create namespace if not exists
         run: |
-          if ! kubectl get namespace $ENVIRONMENT; then
-            echo "Creating namespace $ENVIRONMENT"
-            kubectl create namespace $ENVIRONMENT
+          TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
+          if ! kubectl get namespace $TARGET_BRANCH; then
+            echo "Creating namespace $TARGET_BRANCH"
+            kubectl create namespace $TARGET_BRANCH
           fi
 
       - name: Import GPG key
@@ -182,8 +183,7 @@ jobs:
       - name: Deploy Helm chart
         run: |
           cd helm
-          echo "Current GITHUB_REF: $GITHUB_REF"
-          TARGET_BRANCH=${GITHUB_REF#refs/heads/}
+          TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
           echo "Deploying to environment: $TARGET_BRANCH"
           helm upgrade --install albert-shoes-shop-chatbot . --namespace $TARGET_BRANCH
 
