@@ -1,5 +1,4 @@
 #!/bin/bash
-# TODO: Add environment variable for account-id
 
 ENVIRONMENT=$(grep 'environment:' ./helm/values.yaml | awk '{print $2}')
 VERSION=$(grep 'version:' ./helm/values.yaml | awk '{print $2}')

@@ -38,9 +38,9 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ./terraform
 
-      # TODO: Remove 'Display kubeconfig'
-      - name: Display kubeconfig
-        run: cat ./terraform/kubeconfig_ce5-group6-eks-cluster
+# Debugging step: Displays kubeconfig content. Uncomment only for secure debugging.
+#     - name: Display kubeconfig
+#       run: cat ./terraform/kubeconfig_ce5-group6-eks-cluster
 
       - name: Set KUBECONFIG environment variable
         id: set_kubeconfig
@@ -122,7 +122,7 @@ jobs:
         run: |
           ENVIRONMENT=$(yq e .environment helm/values.yaml)
           echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
-          echo "Environment: $ENVIRONMENT" # Debugging step
+          echo "Environment: $ENVIRONMENT"
 
       - name: Show current directory and Kubernetes context
         run: |
