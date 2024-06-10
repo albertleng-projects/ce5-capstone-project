@@ -309,9 +309,10 @@ Scratches
 .secrets
 bin
 
-**/kubeconfig_ce5-group6-eks-cluster
+**/kubeconfig_ce5-group6-eks-cluster*
 
 helm/secrets.yaml
 helm/secrets.dec.yaml
 
 helm/private*.gpg*
+

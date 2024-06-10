@@ -37,8 +37,8 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve
         working-directory: ./terraform
-      #        TODO: Set secrets.KUBECONFIG with the output of terraform apply
 
+      # TODO: Remove 'Display kubeconfig'
       - name: Display kubeconfig
         run: cat ./terraform/kubeconfig_ce5-group6-eks-cluster
 
@@ -117,7 +117,6 @@ jobs:
       - name: Update kubeconfig
         run: |
           aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ce5-group6-eks-cluster
-          #         TODO: fix cluster-name
 
       - name: Set environment variable
         run: echo "ENVIRONMENT=$(yq e .environment helm/values.yaml)" >> $GITHUB_ENV
@@ -160,6 +159,6 @@ jobs:
       - name: Deploy Helm chart
         run: |
           cd helm
-          helm install albert-shoes-shop-chatbot .
+          helm install albert-shoes-shop-chatbot . -f values.yaml
 
 
