@@ -48,6 +48,8 @@ jobs:
       - name: 🏷️ Tag with Helm Chart version if merged into main
         if: github.event.pull_request.base.ref == 'main'
         run: |
+          git config --global user.email "albertleng@yahoo.com"
+          git config --global user.name "Albert Leng"
           VERSION=$(yq e .version helm/values.yaml)
           echo "Tagging main branch with $VERSION"
           git tag -a $VERSION -m "Tagging with Helm chart version $VERSION"
