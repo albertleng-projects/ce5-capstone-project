@@ -1,13 +1,13 @@
 environment: develop
-namespace: "{{ .environment }}"
+namespace: "{{ .Values.environment }}"
 version: 0.0.1
 account_id: 255945442255
 
 images:
   chatbot:
-    repository: "{{ .account_id }}.dkr.ecr.us-east-1.amazonaws.com/ce5-group6-ecr-chatbot"
+    repository: "{{ .Values.account_id }}.dkr.ecr.us-east-1.amazonaws.com/ce5-group6-ecr-chatbot"
   sentimentAnalysisApi:
-    repository: "{{ .account_id }}.dkr.ecr.us-east-1.amazonaws.com/ce5-group6-ecr-api"
+    repository: "{{ .Values.account_id }}.dkr.ecr.us-east-1.amazonaws.com/ce5-group6-ecr-api"
 
 env:
   OPENAI_API_KEY: "PLACEHOLDER_OPENAI_API_KEY"
