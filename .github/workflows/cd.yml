@@ -119,7 +119,10 @@ jobs:
           aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ce5-group6-eks-cluster
 
       - name: Set environment variable
-        run: echo "ENVIRONMENT=$(yq e .environment helm/values.yaml)" >> $GITHUB_ENV
+        run: |
+          ENVIRONMENT=$(yq e .environment helm/values.yaml)
+          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+          echo "Environment: $ENVIRONMENT" # Debugging step
 
       - name: Show current directory and Kubernetes context
         run: |
@@ -131,6 +134,7 @@ jobs:
       - name: Create namespace if not exists
         run: |
           if ! kubectl get namespace $ENVIRONMENT; then
+            echo "Creating namespace $ENVIRONMENT"
             kubectl create namespace $ENVIRONMENT
           fi
 
