@@ -15,16 +15,19 @@ jobs:
     steps:
       - name: 🧪 Validate branch name
         run: |
-          PR_BRANCH=${{ github.head_ref }}
-          TARGET_BRANCH=${{ github.base_ref }}
-          if [[ "$TARGET_BRANCH" == "develop" && ("$PR_BRANCH" == feature/* || "$PR_BRANCH" == bugfix/*) ]]; then
-            echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
-          elif [[ ("$TARGET_BRANCH" == "staging" || "TARGET_BRANCH" == "main") && "$PR_BRANCH" == "develop" ]]; then
-            echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
-          else
-            echo "❌ Invalid source branch ($PR_BRANCH) for merging into '$TARGET_BRANCH'. Check branch protection rules." >&2
-            exit 1
-          fi
+               PR_BRANCH=${{ github.head_ref }}
+               TARGET_BRANCH=${{ github.base_ref }}
+               if [[ "$TARGET_BRANCH" == "develop" && ("$PR_BRANCH" == feature/* || "$PR_BRANCH" == bugfix/*) ]]; then
+               echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
+          #          TODO: Add rule to also allow staging to main merges
+               elif [[ ("$TARGET_BRANCH" == "staging" || "$TARGET_BRANCH" == "main") && "$PR_BRANCH" == "develop" ]]; then
+               echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
+               elif [[ "$TARGET_BRANCH" == "main" && "$PR_BRANCH" == "staging" ]]; then
+               echo "✅ Source branch ($PR_BRANCH) is valid for merging into '$TARGET_BRANCH'."
+               else
+               echo "❌ Invalid source branch ($PR_BRANCH) for merging into '$TARGET_BRANCH'. Check branch protection rules." >&2
+               exit 1
+               fi
   trigger-ci:
     needs: [ check ]
     runs-on: ubuntu-latest
