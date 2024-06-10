@@ -1,0 +1,232 @@
+# .github/workflows/ci.yml
+name: 🏗 CI
+
+on:
+  repository_dispatch:
+    types: [ branch-rules-checked ]
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  actions: write
+  checks: write
+  deployments: write
+  issues: write
+  discussions: write
+  repository-projects: write
+  security-events: write
+  statuses: write
+
+jobs:
+  test-services:
+    if: github.ref == 'refs/heads/develop'
+    name: Test Chatbot 🤖 and Sentiment Analysis API 📊
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      PYTHONPATH: ${{ github.workspace }}/chatbot/app:${{ github.workspace }}/chatbot/tests:${{ github.workspace }}
+
+    steps:
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python 3.10.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.14'
+
+      - name: 📚 Install dependencies for Chatbot 🤖
+        run: |
+          cd chatbot
+          pip install -r requirements.txt
+
+      - name: 🧪 Run unit tests for Chatbot 🤖
+        run: |
+          cd chatbot
+          pytest -p no:warnings tests/
+
+      - name: 📚 Install dependencies for Sentiment Analysis API 📊
+        run: |
+          cd api
+          pip install -r requirements.txt
+
+      - name: 🧪 Run unit tests for Sentiment Analysis API 📊
+        run: |
+          cd api
+          pytest -p no:warnings tests/
+
+      - name: 📝 Print summary
+        run: |
+          echo "✅ Checkout code"
+          echo "✅ Install dependencies"
+          echo "✅ Run unit tests"
+
+  codacy-security-scan:
+    if: github.ref == 'refs/heads/develop'
+    name: 🛡️ Codacy Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🕵️‍♀️ Run Codacy Analysis CLI
+        uses: codacy/codacy-analysis-cli-action@v4.4.0
+        with:
+          output: results.sarif
+          format: sarif
+          gh-code-scanning-compat: true
+          max-allowed-issues: 2147483647
+
+      - name: 📤 Upload SARIF results file
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: results.sarif
+
+  trivy-chatbot-docker-image-scan:
+    if: github.ref == 'refs/heads/develop'
+    name: 🐳 Trivy Chatbot Docker Image 🤖 Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🏗️ Build Docker image for Chatbot 🤖
+        run: |
+          cd chatbot
+          docker build -t chatbot-app .
+
+      - name: 🛡️ Run Trivy vulnerability scanner for Chatbot 🤖
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'chatbot-app'
+          format: 'template'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'HIGH,CRITICAL'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results-chatbot.sarif'
+
+      - name: 📤 Upload Trivy scan results for Chatbot 🤖
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: 'trivy-results-chatbot.sarif'
+
+
+  trivy-api-docker-image-scan:
+    if: github.ref == 'refs/heads/develop'
+    name: 🐳 Trivy Sentiment Analysis API 📊Docker Image Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🏗️ Build Docker image for Sentiment Analysis API 📊
+        run: |
+          cd api
+          docker build -t sentiment-analysis-api .
+
+      - name: 🛡️ Run Trivy vulnerability scanner for Sentiment Analysis API 📊
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'sentiment-analysis-api'
+          format: 'template'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'HIGH,CRITICAL'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results-api.sarif'
+
+      - name: 📤 Upload Trivy scan results for Sentiment Analysis API 📊
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: 'trivy-results-api.sarif'
+
+  quality-checks:
+    if: github.ref == 'refs/heads/develop'
+    needs: [ codacy-security-scan, trivy-chatbot-docker-image-scan, trivy-api-docker-image-scan, test-services ]
+    name: 🔍 Quality Checks with Bandit, Black, Pylint
+    runs-on: ubuntu-latest
+    env:
+      MINIMUM_PYLINT_SCORE: 8
+
+    steps:
+      - name: 📥 Check out code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python 3.10.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.14'
+
+      - name: 📦 Install dependencies for Chatbot 🤖
+        run: |
+          cd chatbot
+          pip install -r requirements.txt
+
+      - name: 🎨 Format code with black for Chatbot 🤖
+        run: black --check chatbot/
+
+      - name: 🔒 Security check with bandit for Chatbot 🤖
+        run: |
+          output=$(bandit -r chatbot/ -f json | tr -d '\000-\031')
+          high_severity_issues=$(echo $output | jq '.results[] | select(.issue_severity=="HIGH")')
+          if [ -n "$high_severity_issues" ]; then
+            echo "⚠️ High severity issues found:"
+            echo $high_severity_issues
+            exit 1
+          else
+            echo "✅ Bandit security check passed with no high severity issues."
+          fi
+
+      - name: 🧹 Lint with pylint for Chatbot 🤖
+        run: |
+          pylint chatbot/ | tee pylint_output_chatbot.log
+
+      - name: 📊 Check pylint score for Chatbot 🤖
+        run: |
+          score=$(grep -oP 'Your code has been rated at \K[0-9.]+' pylint_output_chatbot.log)
+          if (( $(echo "$score < $MINIMUM_PYLINT_SCORE" | bc -l) )); then
+            echo "❌ Pylint score for chatbot is less than $MINIMUM_PYLINT_SCORE"
+            exit 1
+          else
+            echo "✅ Pylint score $score for chatbot is greater than or equal to $MINIMUM_PYLINT_SCORE"
+          fi
+
+      - name: 📦 Install dependencies for Sentiment Analysis API 📊
+        run: |
+          cd api
+          pip install -r requirements.txt
+
+      - name: 🎨 Format code with black for Sentiment Analysis API 📊
+        run: black --check api/
+
+      - name: 🔒 Security check with bandit for Sentiment Analysis API 📊
+        run: |
+          output=$(bandit -r api/ -f json | tr -d '\000-\031')
+          high_severity_issues=$(echo $output | jq '.results[] | select(.issue_severity=="HIGH")')
+          if [ -n "$high_severity_issues" ]; then
+            echo "⚠️ High severity issues found:"
+            echo $high_severity_issues
+            exit 1
+          else
+            echo "✅ Bandit security check passed with no high severity issues."
+          fi
+
+      - name: 🧹 Lint with pylint for Sentiment Analysis API 📊
+        run: |
+          pylint api/ | tee pylint_output_sentiment.log
+
+      - name: 📊 Check pylint score for Sentiment Analysis API 📊
+        run: |
+          score=$(grep -oP 'Your code has been rated at \K[0-9.]+' pylint_output_sentiment.log)
+          if (( $(echo "$score < $MINIMUM_PYLINT_SCORE" | bc -l) )); then
+            echo "❌ Pylint score for Sentiment Analysis API is less than $MINIMUM_PYLINT_SCORE"
+            exit 1
+          else
+            echo "✅ Pylint score $score for Sentiment Analysis API is greater than or equal to $MINIMUM_PYLINT_SCORE"
+          fi

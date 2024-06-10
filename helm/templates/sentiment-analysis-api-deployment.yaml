@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentiment-analysis-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sentiment-analysis-api
+  template:
+    metadata:
+      labels:
+        app: sentiment-analysis-api
+    spec:
+      containers:
+        - name: sentiment-analysis-api
+          image: "{{ .Values.images.sentimentAnalysisApi.repository }}-{{ .Values.environment }}:{{ .Values.version }}"
+          ports:
+            - containerPort: 5000
+          env:
+            - name: AWS_REGION
+              value: "{{ .Values.env.AWS_REGION }}"
+            - name: DYNAMODB_TABLE_NAME
+              value: "{{ .Values.env.DYNAMODB_TABLE }}"
+            - name: LOGGING_LEVEL
+              value: "{{ .Values.env.LOGGING_LEVEL }}"
+            - name: DEBUG
+              value: "{{ .Values.env.DEBUG }}"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: OPENAI_API_KEY
