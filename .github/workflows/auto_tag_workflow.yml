@@ -44,5 +44,14 @@ jobs:
               date,
               time
             }
+
+      - name: 🏷️ Tag with Helm Chart version if merged into main
+        if: github.event.pull_request.base.ref == 'main'
+        run: |
+          VERSION=$(yq e .version helm/values.yaml)
+          echo "Tagging main branch with $VERSION"
+          git tag -a $VERSION -m "Tagging with Helm chart version $VERSION"
+          git push origin $VERSION
+
       - name: 📝 Summary
         run: echo "🏷️ Tag ${{ steps.auto_tag.outputs.tagName }} created for merge into ${{ steps.auto_tag.outputs.baseRef }} at ${{ steps.auto_tag.outputs.date }}-${{ steps.auto_tag.outputs.time }}"

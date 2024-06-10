@@ -38,9 +38,9 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ./terraform
 
-# Debugging step: Displays kubeconfig content. Uncomment only for secure debugging.
-#     - name: Display kubeconfig
-#       run: cat ./terraform/kubeconfig_ce5-group6-eks-cluster
+      # Debugging step: Displays kubeconfig content. Uncomment only for secure debugging.
+      #     - name: Display kubeconfig
+      #       run: cat ./terraform/kubeconfig_ce5-group6-eks-cluster
 
       - name: Set KUBECONFIG environment variable
         id: set_kubeconfig
@@ -159,6 +159,19 @@ jobs:
           sed -i 's/PLACEHOLDER_OPENAI_API_KEY/'$(yq e .OPENAI_API_KEY secrets.dec.yaml)'/g' values.yaml
           sed -i 's/PLACEHOLDER_AWS_ACCESS_KEY_ID/'$(yq e .AWS_ACCESS_KEY_ID secrets.dec.yaml)'/g' values.yaml
           sed -i 's/PLACEHOLDER_AWS_SECRET_ACCESS_KEY/'$(yq e .AWS_SECRET_ACCESS_KEY secrets.dec.yaml)'/g' values.yaml
+
+      - name: Check and uninstall namespaces
+        run: |
+          for namespace in develop staging main; do
+            echo "Checking if namespace $namespace exists..."
+            if kubectl get namespace $namespace; then
+              echo "Namespace $namespace exists. Uninstalling..."
+              helm uninstall $namespace
+              echo "Namespace $namespace uninstalled."
+            else
+              echo "Namespace $namespace does not exist."
+            fi
+          done
 
       - name: Deploy Helm chart
         run: |
