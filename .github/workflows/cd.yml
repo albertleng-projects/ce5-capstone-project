@@ -182,6 +182,8 @@ jobs:
       - name: Deploy Helm chart
         run: |
           cd helm
-          helm upgrade --install albert-shoes-shop-chatbot . --namespace $ENVIRONMENT
+          TARGET_BRANCH=${GITHUB_REF#refs/heads/}
+          echo "Deploying to environment: TARGET_BRANCH"
+          helm upgrade --install albert-shoes-shop-chatbot . --namespace $TARGET_BRANCH
 
 
