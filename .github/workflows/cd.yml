@@ -160,14 +160,15 @@ jobs:
           sed -i 's/PLACEHOLDER_AWS_ACCESS_KEY_ID/'$(yq e .AWS_ACCESS_KEY_ID secrets.dec.yaml)'/g' values.yaml
           sed -i 's/PLACEHOLDER_AWS_SECRET_ACCESS_KEY/'$(yq e .AWS_SECRET_ACCESS_KEY secrets.dec.yaml)'/g' values.yaml
 
-      - name: Check and uninstall namespaces
+# TODO: (low priority) Make albert-shoes-shop-chatbot a variable
+      - name: Check and uninstall albert-shoes-shop-chatbot
         run: |
           for namespace in develop staging main; do
             echo "Checking if namespace $namespace exists..."
             if kubectl get namespace $namespace; then
-              echo "Namespace $namespace exists. Uninstalling..."
-              helm uninstall $namespace
-              echo "Namespace $namespace uninstalled."
+              echo "Namespace $namespace exists. Uninstalling albert-shoes-shop-chatbot..."
+              helm uninstall albert-shoes-shop-chatbot -n $namespace
+              echo "Namespace albert-shoes-shop-chatbot -n $namespace uninstalled."
             else
               echo "Namespace $namespace does not exist."
             fi
