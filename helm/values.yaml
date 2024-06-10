@@ -1,0 +1,22 @@
+environment: staging
+version: 0.0.2
+account_id: 255945442255
+
+images:
+#  TODO: (Low priority) Update the repository URLs using variables
+  chatbot:
+    repository: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce5-group6-ecr-chatbot
+  sentimentAnalysisApi:
+    repository: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce5-group6-ecr-api
+
+env:
+  OPENAI_API_KEY: "PLACEHOLDER_OPENAI_API_KEY"
+  AWS_REGION: "us-east-1"
+  DYNAMODB_TABLE: "ce5-group6-user-queries"
+  AWS_ACCESS_KEY_ID: "PLACEHOLDER_AWS_ACCESS_KEY_ID"
+  AWS_SECRET_ACCESS_KEY: "PLACEHOLDER_AWS_SECRET_ACCESS_KEY"
+  SENTIMENT_API_BASE_URL: "http://sentiment-analysis-api-service"
+  # 10 = DEBUG, 20 = INFO, 30 = WARNING, 40 = ERROR, 50 = CRITICAL
+  LOGGING_LEVEL: "10"
+  # Enable debug mode. "True" or "False"
+  DEBUG: "False"

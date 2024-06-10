@@ -1,0 +1,26 @@
+version: '3'
+services:
+  sentiment_analysis_api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      - AWS_REGION=${AWS_REGION}
+      - DYNAMODB_TABLE=${DYNAMODB_TABLE}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - LOGGING_LEVEL=${LOGGING_LEVEL}
+    ports:
+      - "5000:5000"
+
+  chatbot:
+    build:
+      context: ./chatbot
+      dockerfile: Dockerfile
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SENTIMENT_API_BASE_URL=${SENTIMENT_API_BASE_URL}
+    ports:
+      - "8501:8501"
+    depends_on:
+      - sentiment_analysis_api
