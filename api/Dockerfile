@@ -1,5 +1,7 @@
 FROM python:3.10.14-slim-bullseye
 
+RUN apt-get update && apt-get install -y curl
+
 WORKDIR /app
 
 ADD . /app

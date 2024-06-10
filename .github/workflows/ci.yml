@@ -20,6 +20,7 @@ permissions:
 
 jobs:
   test-services:
+    if: github.ref == 'refs/heads/develop'
     name: Test Chatbot 🤖 and Sentiment Analysis API 📊
     runs-on: ubuntu-latest
     env:
@@ -64,6 +65,7 @@ jobs:
           echo "✅ Run unit tests"
 
   codacy-security-scan:
+    if: github.ref == 'refs/heads/develop'
     name: 🛡️ Codacy Security Scan
     runs-on: ubuntu-latest
     steps:
@@ -84,6 +86,7 @@ jobs:
           sarif_file: results.sarif
 
   trivy-chatbot-docker-image-scan:
+    if: github.ref == 'refs/heads/develop'
     name: 🐳 Trivy Chatbot Docker Image 🤖 Scan
     runs-on: ubuntu-latest
     steps:
@@ -114,6 +117,7 @@ jobs:
 
 
   trivy-api-docker-image-scan:
+    if: github.ref == 'refs/heads/develop'
     name: 🐳 Trivy Sentiment Analysis API 📊Docker Image Scan
     runs-on: ubuntu-latest
     steps:
@@ -143,6 +147,7 @@ jobs:
           sarif_file: 'trivy-results-api.sarif'
 
   quality-checks:
+    if: github.ref == 'refs/heads/develop'
     needs: [ codacy-security-scan, trivy-chatbot-docker-image-scan, trivy-api-docker-image-scan, test-services ]
     name: 🔍 Quality Checks with Bandit, Black, Pylint
     runs-on: ubuntu-latest
