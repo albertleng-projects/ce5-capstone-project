@@ -159,6 +159,6 @@ jobs:
       - name: Deploy Helm chart
         run: |
           cd helm
-          helm install albert-shoes-shop-chatbot . -f values.yaml
+          helm install albert-shoes-shop-chatbot . --namespace $ENVIRONMENT
 
 
