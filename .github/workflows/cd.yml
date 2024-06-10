@@ -160,7 +160,7 @@ jobs:
           sed -i 's/PLACEHOLDER_AWS_ACCESS_KEY_ID/'$(yq e .AWS_ACCESS_KEY_ID secrets.dec.yaml)'/g' values.yaml
           sed -i 's/PLACEHOLDER_AWS_SECRET_ACCESS_KEY/'$(yq e .AWS_SECRET_ACCESS_KEY secrets.dec.yaml)'/g' values.yaml
 
-# TODO: (low priority) Make albert-shoes-shop-chatbot a variable
+      # TODO: (low priority) Make albert-shoes-shop-chatbot a variable
       - name: Check and uninstall namespaces
         run: |
           for namespace in develop staging main; do
@@ -182,8 +182,10 @@ jobs:
       - name: Deploy Helm chart
         run: |
           cd helm
+          echo "Current GITHUB_REF: $GITHUB_REF"
           TARGET_BRANCH=${GITHUB_REF#refs/heads/}
-          echo "Deploying to environment: TARGET_BRANCH"
+          echo "Deploying to environment: $TARGET_BRANCH"
           helm upgrade --install albert-shoes-shop-chatbot . --namespace $TARGET_BRANCH
+
 
 
