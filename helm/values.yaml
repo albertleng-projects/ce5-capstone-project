@@ -1,4 +1,4 @@
-environment: staging
+environment: main
 version: 0.0.3
 account_id: 255945442255
 
