@@ -62,13 +62,12 @@ jobs:
           git tag -a $VERSION -m "Tagging with Helm chart version $VERSION"
           git push origin $VERSION
 
-      #          TODO: Refer to https://chatgpt.com/share/c4bf3c42-603c-4574-b0a7-1706b945bec4 for create release for main
-
       - name: 🚀 Create GitHub release
         if: github.event.pull_request.base.ref == 'main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          VERSION=$(yq e .version helm/values.yaml)
           echo "Creating GitHub release for version: $VERSION"
           gh release create $VERSION -t $VERSION -n "Release for version $VERSION"
 
