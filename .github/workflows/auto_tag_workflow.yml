@@ -17,6 +17,13 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
+      - name: 🛠️ Install GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt upgrade
+          sudo apt install gh
+          gh --version
+
       - name: 🏷️ Auto tag
         id: auto_tag
         uses: actions/github-script@v7
@@ -54,6 +61,17 @@ jobs:
           echo "Tagging main branch with $VERSION"
           git tag -a $VERSION -m "Tagging with Helm chart version $VERSION"
           git push origin $VERSION
+
+      #          TODO: Refer to https://chatgpt.com/share/c4bf3c42-603c-4574-b0a7-1706b945bec4 for create release for main
+
+      - name: 🚀 Create GitHub release
+        if: github.event.pull_request.base.ref == 'main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Creating GitHub release for version: $VERSION"
+          gh release create $VERSION -t $VERSION -n "Release for version $VERSION"
+
 
       - name: 📝 Summary
         run: echo "🏷️ Tag ${{ steps.auto_tag.outputs.tagName }} created for merge into ${{ steps.auto_tag.outputs.baseRef }} at ${{ steps.auto_tag.outputs.date }}-${{ steps.auto_tag.outputs.time }}"
