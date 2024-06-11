@@ -1,5 +1,4 @@
-# .github/workflows/cd.yml
-name: Infrastructure Setup, Build and Push Images and Deploy Albert Shoes Chatbot
+name: 🚀 Infrastructure Setup, Build and Push Images and Deploy Albert Shoes Chatbot
 
 on:
   pull_request:
@@ -13,36 +12,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
+      - name: 🔑 Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Setup Terraform
+      - name: 🛠️ Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init
+      - name: 🔍 Terraform Init
         run: terraform init
         working-directory: ./terraform
 
-      - name: Terraform Plan
+      - name: 📝 Terraform Plan
         run: terraform plan
         working-directory: ./terraform
 
-      - name: Terraform Apply
+      - name: 🚀 Terraform Apply
         run: terraform apply -auto-approve
         working-directory: ./terraform
 
       # Debugging step: Displays kubeconfig content. Uncomment only for secure debugging.
-      #     - name: Display kubeconfig
+      #     - name: 🕵️ Display kubeconfig
       #       run: cat ./terraform/kubeconfig_ce5-group6-eks-cluster
 
-      - name: Set KUBECONFIG environment variable
+      - name: 🌐 Set KUBECONFIG environment variable
         id: set_kubeconfig
         run: |
           echo "KUBECONFIG=$GITHUB_WORKSPACE/terraform/kubeconfig_ce5-group6-eks-cluster" >> $GITHUB_ENV
@@ -56,20 +55,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
+      - name: 🔑 Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Set up shell
+      - name: 🖥️ Set up shell
         run: echo "runner:$(id -u -n)" | sudo chpasswd
 
-      - name: Run build_and_push_docker_images.sh
+      - name: 🛠️ Run build_and_push_docker_images.sh
         run: |
           sudo chmod +x ./build_and_push_docker_images.sh
           ./build_and_push_docker_images.sh
@@ -81,57 +80,51 @@ jobs:
       KUBECONFIG: ${{ needs.terraform.outputs.kubeconfig_path }}
 
     steps:
-      - name: Checkout
+      - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Helm
+      - name: 🛡️ Set up Helm
         uses: Azure/setup-helm@v4.2.0
 
-      - name: Install helm-secrets plugin
+      - name: 🔐 Install helm-secrets plugin
         run: helm plugin install https://github.com/jkroepke/helm-secrets --version v4.6.0
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: Install yq
+      - name: 🛠️ Install yq
         run: |
           sudo wget https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_linux_amd64 -O /usr/bin/yq
           sudo chmod +x /usr/bin/yq
 
       #      TODO: Is `Install aws-iam-authenticator` needed?
-      - name: Install aws-iam-authenticator
+      - name: 🔧 Install aws-iam-authenticator
         run: |
           curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/aws-iam-authenticator
           chmod +x ./aws-iam-authenticator
           sudo mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
 
-      - name: Configure AWS Credentials
+      - name: 🔑 Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Update kubeconfig
+      - name: 📡 Update kubeconfig
         run: |
           aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ce5-group6-eks-cluster
 
-      - name: Set environment variable
-        run: |
-          ENVIRONMENT=$(yq e .environment helm/values.yaml)
-          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
-          echo "Environment: $ENVIRONMENT"
-
-      - name: Show current directory and Kubernetes context
+      - name: 📂 Show current directory and Kubernetes context
         run: |
           echo "Current directory:"
           pwd
           echo "Current Kubernetes context:"
           kubectl config current-context
 
-      - name: Create namespace if not exists
+      - name: 🏷️ Create namespace if not exists
         run: |
           TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
           if ! kubectl get namespace $TARGET_BRANCH; then
@@ -139,20 +132,20 @@ jobs:
             kubectl create namespace $TARGET_BRANCH
           fi
 
-      - name: Import GPG key
+      - name: 🗝️ Import GPG key
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import
 
-      - name: Install sops
+      - name: 🔒 Install sops
         run: |
           wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops_3.7.1_amd64.deb
           sudo dpkg -i sops_3.7.1_amd64.deb
 
-      - name: Decrypt secrets
+      - name: 🔓 Decrypt secrets
         run: helm secrets decrypt helm/secrets.enc.yaml > helm/secrets.dec.yaml
 
-      - name: Replace placeholders in values.yaml
+      - name: 🔄 Replace placeholders in values.yaml
         run: |
           cd helm
           echo "Current directory:"
@@ -162,7 +155,7 @@ jobs:
           sed -i 's/PLACEHOLDER_AWS_SECRET_ACCESS_KEY/'$(yq e .AWS_SECRET_ACCESS_KEY secrets.dec.yaml)'/g' values.yaml
 
       # TODO: (low priority) Make albert-shoes-shop-chatbot a variable
-      - name: Check and uninstall namespaces
+      - name: 🧹 Check and uninstall namespaces
         run: |
           for namespace in develop staging main; do
             echo "Checking if namespace $namespace exists..."
@@ -180,12 +173,9 @@ jobs:
             fi
           done
 
-      - name: Deploy Helm chart
+      - name: 📦 Deploy Helm chart
         run: |
           cd helm
           TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
           echo "Deploying to environment: $TARGET_BRANCH"
           helm upgrade --install albert-shoes-shop-chatbot . --namespace $TARGET_BRANCH
-
-
-
