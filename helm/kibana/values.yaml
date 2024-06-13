@@ -12,8 +12,7 @@ resources:
     cpu: "500m"
     memory: "2Gi"
 livenessProbe:
-  httpGet:
-    path: /healthz
+  tcpSocket:
     port: 5000
   initialDelaySeconds: 30
   timeoutSeconds: 10
@@ -25,8 +24,7 @@ readinessProbe:
   timeoutSeconds: 10
 
 livenessProbeAppB:
-  httpGet:
-    path: /healthz
+  tcpSocket:
     port: 8051
   initialDelaySeconds: 30
   timeoutSeconds: 10
