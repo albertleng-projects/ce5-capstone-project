@@ -26,6 +26,6 @@ persistence:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 8Gi  # Update this to match your actual storage size
+          storage: 10Gi  # Update this to match your actual storage size
 network:
   host: 0.0.0.0

@@ -1,0 +1,15 @@
+# helm/templates/pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: elasticsearch-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp2
+  awsElasticBlockStore:
+    volumeID: vol-0ee44ae5dbee725e6
+    fsType: ext4
