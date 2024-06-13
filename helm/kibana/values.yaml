@@ -25,12 +25,12 @@ readinessProbe:
 
 livenessProbeAppB:
   tcpSocket:
-    port: 8051
+    port: 8501
   initialDelaySeconds: 30
   timeoutSeconds: 10
 readinessProbeAppB:
   httpGet:
     path: /healthz
-    port: 8051
+    port: 8501
   initialDelaySeconds: 30
   timeoutSeconds: 10
