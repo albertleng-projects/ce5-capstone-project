@@ -3,6 +3,11 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: elasticsearch-master-pv-0
+  labels:
+    app: elasticsearch-master
+  annotations:
+    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
 spec:
   capacity:
     storage: 10Gi
@@ -13,13 +18,16 @@ spec:
   awsElasticBlockStore:
     volumeID: vol-0ee44ae5dbee725e6  # Unique EBS volume ID
     fsType: ext4
-
 ---
-
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: elasticsearch-master-pv-1
+  labels:
+    app: elasticsearch-master
+  annotations:
+    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
 spec:
   capacity:
     storage: 10Gi
@@ -30,13 +38,16 @@ spec:
   awsElasticBlockStore:
     volumeID: vol-06d86a1e4ca80a3fd  # Another unique EBS volume ID
     fsType: ext4
-
 ---
-
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: elasticsearch-master-pv-2
+  labels:
+    app: elasticsearch-master
+  annotations:
+    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
 spec:
   capacity:
     storage: 10Gi
