@@ -1,3 +1,4 @@
+# .github/workflows/cd.yml
 name: 🚀 Infrastructure Setup, Build and Push Images and Deploy Albert Shoes Chatbot
 
 on:
@@ -86,6 +87,12 @@ jobs:
       - name: 🛡️ Set up Helm
         uses: Azure/setup-helm@v4.2.0
 
+      - name: 🔍 Add Elastic Helm repository
+        run: helm repo add elastic https://helm.elastic.co
+
+      - name: 🔄 Update Helm repositories
+        run: helm repo update
+
       - name: 🔐 Install helm-secrets plugin
         run: helm plugin install https://github.com/jkroepke/helm-secrets --version v4.6.0
 
@@ -124,6 +131,25 @@ jobs:
           echo "Current Kubernetes context:"
           kubectl config current-context
 
+      - name: 🏷️ Create logging namespace if not exists
+        run: |
+          if ! kubectl get namespace logging; then
+            echo "Creating logging namespace"
+            kubectl create namespace logging
+          else
+            echo "Namespace logging already exists"
+          fi
+
+      - name: 📦 Deploy Elasticsearch with Helm
+        run: helm upgrade --install elasticsearch elastic/elasticsearch -n logging -f helm/elasticsearch/values.yaml
+
+      - name: 📦 Deploy Kibana with Helm
+        run: helm upgrade --install kibana elastic/kibana -n logging -f helm/kibana/values.yaml
+
+      - name: 📦 Deploy Fluentd with Helm
+        run: helm upgrade --install fluentd elastic/fluentd -n logging -f helm/fluentd/values.yaml
+
+
       - name: 🏷️ Create namespace if not exists
         run: |
           TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
@@ -155,7 +181,7 @@ jobs:
           sed -i 's/PLACEHOLDER_AWS_SECRET_ACCESS_KEY/'$(yq e .AWS_SECRET_ACCESS_KEY secrets.dec.yaml)'/g' values.yaml
 
       # TODO: (low priority) Make albert-shoes-shop-chatbot a variable
-      - name: 🧹 Check and uninstall namespaces
+      - name: 🧹 Check namespaces and uninstall releases
         run: |
           for namespace in develop staging main; do
             echo "Checking if namespace $namespace exists..."

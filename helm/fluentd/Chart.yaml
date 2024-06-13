@@ -1,0 +1,6 @@
+# helm/fluent/Chart.yaml
+apiVersion: v2
+name: fluentd
+description: A Helm chart for deploying Fluentd
+version: 0.5.2
+appVersion: v1.16.2

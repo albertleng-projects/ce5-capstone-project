@@ -1,0 +1,6 @@
+# helm/kibana/Chart.yaml
+apiVersion: v2
+name: kibana
+description: A Helm chart for deploying Kibana
+version: 8.5.1
+appVersion: 8.5.1

@@ -1,0 +1,21 @@
+# helm/elasticsearch/values.yaml
+clusterName: "elasticsearch"
+nodeGroup: "master"
+master:
+  replicas: 3
+  heapSize: "512m"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "512Mi"
+persistence:
+  enabled: true
+  storageClass: "gp2"
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+network:
+  host: 0.0.0.0

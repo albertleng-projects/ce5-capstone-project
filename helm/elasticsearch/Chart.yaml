@@ -1,0 +1,6 @@
+# helm/elasticsearch/Chart.yaml
+apiVersion: v2
+name: elasticsearch
+description: A Helm chart for deploying Elasticsearch
+version: 8.5.1
+appVersion: 8.5.1

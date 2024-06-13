@@ -12,6 +12,7 @@ import logging
 import requests
 import streamlit as st
 import openai
+from flask import Flask, jsonify
 from dotenv import load_dotenv
 from bot_logic import query
 from logger_config import setup_logger
@@ -22,9 +23,11 @@ API_KEY = os.getenv("OPENAI_API_KEY")
 openai.api_key = API_KEY
 MODEL_ENGINE = "gpt-3.5-turbo"
 LOGGING_LEVEL = (
-    int(os.getenv("LOGGING_LEVEL")) if os.getenv("LOGGING_LEVEL") else logging.DEBUG
+    int(os.getenv("LOGGING_LEVEL")) if os.getenv(
+        "LOGGING_LEVEL") else logging.DEBUG
 )
-SENTIMENT_API_BASE_URL = os.getenv("SENTIMENT_API_BASE_URL", "http://localhost:5000")
+SENTIMENT_API_BASE_URL = os.getenv("SENTIMENT_API_BASE_URL",
+                                   "http://localhost:5000")
 
 script_name = os.path.splitext(os.path.basename(__file__))[0]
 
@@ -32,6 +35,25 @@ logger = setup_logger(script_name, LOGGING_LEVEL)
 
 st.title("👠 Albert Shoes Chatbot App")
 chat_placeholder = st.empty()
+
+# Initialize Flask app
+app = Flask(__name__)
+
+# TODO: Add test for 'health' endpoint
+@app.route("/health", methods=["GET"])
+def health():
+    """
+    Health check endpoint for the application.
+
+    This endpoint returns a JSON response with a status field indicating the
+    health of the application.
+    It's typically used by infrastructure services to determine the health of the application.
+
+    Returns:
+        tuple: A tuple containing a JSON response with the status of the
+        application and an HTTP status code.
+    """
+    return jsonify(status="healthy"), 200
 
 
 def call_sentiment_analysis_api(prompt: str) -> Optional[dict]:
@@ -54,7 +76,8 @@ def call_sentiment_analysis_api(prompt: str) -> Optional[dict]:
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
-        logger.error("Failed to make a request to the sentiment analysis API: %s", e)
+        logger.error(
+            "Failed to make a request to the sentiment analysis API: %s", e)
         return None
 
 
@@ -88,7 +111,8 @@ def start_chat() -> None:
     """
     logger.info("Starting chat")
     with chat_placeholder.container():
-        logger.info("Loading session_state.messages: %s", st.session_state.messages)
+        logger.info("Loading session_state.messages: %s",
+                    st.session_state.messages)
         for message in st.session_state.messages:
             if message["role"] != "system":
                 with st.chat_message(message["role"]):
@@ -111,17 +135,32 @@ def start_chat() -> None:
 
         logger.info("Calling sentiment analysis API")
         sentiment_analysis_response = call_sentiment_analysis_api(prompt)
-        logger.debug("Sentiment analysis response: %s", sentiment_analysis_response)
+        logger.debug("Sentiment analysis response: %s",
+                     sentiment_analysis_response)
 
         with st.chat_message("assistant"):
-            logger.debug("Adding assistant response via st.markdown: %s", response)
+            logger.debug("Adding assistant response via st.markdown: %s",
+                         response)
             st.markdown(response)
 
-        logger.debug("Adding assistant response %s to session_state.messages", response)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        logger.debug("Adding assistant response %s to session_state.messages",
+                     response)
+        st.session_state.messages.append(
+            {"role": "assistant", "content": response})
     logger.info("Chat started")
 
 
 if __name__ == "__main__":
     init_chat_history()
     start_chat()
+
+    # Run the Flask app for the health endpoint in a separate thread
+    from threading import Thread
+
+
+    def run_flask():
+        app.run(host="0.0.0.0", port=5000)
+
+
+    flask_thread = Thread(target=run_flask)
+    flask_thread.start()

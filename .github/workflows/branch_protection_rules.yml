@@ -1,4 +1,4 @@
-# .github/workflows/validate_pr_source_branch.yml
+# .github/workflows/branch_protection_rule.yml
 name: 🛡️ Validate PR Source Branch Name
 
 on:
