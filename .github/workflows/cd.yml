@@ -93,6 +93,9 @@ jobs:
       - name: 🔍 Add Bitnami Helm repository
         run: helm repo add bitnami https://charts.bitnami.com/bitnami
 
+      - name: 🔍 Add fluent Helm repository
+        run: helm repo add fluent https://fluent.github.io/helm-charts
+
       - name: 🔄 Update Helm repositories
         run: helm repo update
 
