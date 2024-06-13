@@ -19,9 +19,11 @@ persistence:
   size: 8Gi
   volumeClaimTemplate:
     metadata:
-      annotations:
-        volume.beta.kubernetes.io/storage-class: "gp2"  # Update this to match your actual storage class
+      annotations: { }
     spec:
+      storageClassName: "gp2"  # Correct way to specify the storage class
+      accessModes:
+        - ReadWriteOnce
       resources:
         requests:
           storage: 8Gi  # Update this to match your actual storage size
