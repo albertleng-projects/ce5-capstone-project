@@ -141,14 +141,13 @@ jobs:
           fi
 
       - name: 📦 Deploy Elasticsearch with Helm
-        run: helm upgrade --install elasticsearch elastic/elasticsearch -n logging -f helm/elasticsearch/values.yaml
+        run: helm upgrade --install elasticsearch elastic/elasticsearch -n logging -f helm/elasticsearch/values.yaml --timeout 10m
 
       - name: 📦 Deploy Kibana with Helm
-        run: helm upgrade --install kibana elastic/kibana -n logging -f helm/kibana/values.yaml
+        run: helm upgrade --install kibana elastic/kibana -n logging -f helm/kibana/values.yaml --timeout 10m
 
       - name: 📦 Deploy Fluentd with Helm
-        run: helm upgrade --install fluentd elastic/fluentd -n logging -f helm/fluentd/values.yaml
-
+        run: helm upgrade --install fluentd elastic/fluentd -n logging -f helm/fluentd/values.yaml --timeout 10m
 
       - name: 🏷️ Create namespace if not exists
         run: |
