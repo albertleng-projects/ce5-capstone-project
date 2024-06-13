@@ -1,6 +1,6 @@
 # helm/values.yml
 environment: main
-version: 0.0.9
+version: 0.0.10
 account_id: 255945442255
 
 images:
