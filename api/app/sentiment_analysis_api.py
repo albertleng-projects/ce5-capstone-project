@@ -37,8 +37,7 @@ from botocore.exceptions import ClientError
 app = Flask(__name__)
 
 
-def setup_logger(name: str,
-                 logging_level: int = logging.DEBUG) -> logging.Logger:
+def setup_logger(name: str, logging_level: int = logging.DEBUG) -> logging.Logger:
     """
     Sets up a logger with the specified name and logging level.
 
@@ -115,18 +114,16 @@ except ClientError as e:
             TableName=DYNAMODB_TABLE,
             KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
             # Partition key
-            AttributeDefinitions=[
-                {"AttributeName": "id", "AttributeType": "S"}],
-            ProvisionedThroughput={"ReadCapacityUnits": 5,
-                                   "WriteCapacityUnits": 5},
+            AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
+            ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5},
         )
     else:
         raise
 
 
-# TODO: Add test for 'health' endpoint
-@app.route("/health")
-def health():
+# TODO: Add test for 'healthz' endpoint
+@app.route("/healthz")
+def healthz():
     """
     Health check endpoint for the application.
 
@@ -176,8 +173,7 @@ def post_user_query():
     logger.info("Received user query")
     text = request.json.get("text")
     logger.debug("Received user query: %s", text)
-    sentiment_response = comprehend.detect_sentiment(Text=text,
-                                                     LanguageCode="en")
+    sentiment_response = comprehend.detect_sentiment(Text=text, LanguageCode="en")
     logger.debug("Sentiment response: %s", sentiment_response)
     sentiment = sentiment_response["Sentiment"]
 

@@ -30,14 +30,14 @@ spec:
               value: "{{ .Values.env.SENTIMENT_API_BASE_URL }}"
           livenessProbe:
             httpGet:
-              path: /health
-              port: 5000
+              path: /healthz
+              port: 8501
             initialDelaySeconds: 30
             timeoutSeconds: 10
           readinessProbe:
             httpGet:
-              path: /health
-              port: 5000
+              path: /healthz
+              port: 8501
             initialDelaySeconds: 30
             timeoutSeconds: 10
           volumeMounts:
