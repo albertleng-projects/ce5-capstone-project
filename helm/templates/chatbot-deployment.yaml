@@ -1,3 +1,4 @@
+# helm/templates/chatbot-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -11,6 +12,8 @@ spec:
     metadata:
       labels:
         app: chatbot
+      annotations:
+        fluentd.io/tag: kubernetes.chatbot
     spec:
       containers:
         - name: chatbot
@@ -25,3 +28,27 @@ spec:
                   key: OPENAI_API_KEY
             - name: SENTIMENT_API_BASE_URL
               value: "{{ .Values.env.SENTIMENT_API_BASE_URL }}"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8501
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8501
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          volumeMounts:
+            - mountPath: /var/log/containers
+              name: varlogcontainers
+            - mountPath: /var/lib/docker/containers
+              name: varlibdockercontainers
+      volumes:
+        - name: varlogcontainers
+          hostPath:
+            path: /var/log/containers
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers

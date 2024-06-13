@@ -1,0 +1,24 @@
+# helm/kibana/values.yaml
+elasticsearchHosts: "elasticsearch-master:9200"
+replicas: 1
+service:
+  type: LoadBalancer
+  port: 5601
+resources:
+  requests:
+    cpu: "100m"
+    memory: "1Gi"
+  limits:
+    cpu: "500m"
+    memory: "2Gi"
+livenessProbe:
+  tcpSocket:
+    port: 5601
+  initialDelaySeconds: 30
+  timeoutSeconds: 10
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: 5601
+  initialDelaySeconds: 30
+  timeoutSeconds: 10

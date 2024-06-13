@@ -93,7 +93,6 @@ LOGGING_LEVEL = (
 )
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-
 script_name = os.path.splitext(os.path.basename(__file__))[0]
 logger = setup_logger(script_name, logging.DEBUG)
 
@@ -120,6 +119,22 @@ except ClientError as e:
         )
     else:
         raise
+
+
+# TODO: Add test for 'healthz' endpoint
+@app.route("/healthz")
+def healthz():
+    """
+    Health check endpoint for the application.
+
+    This endpoint returns a simple response indicating the health of the application.
+    It's typically used by infrastructure services to determine the health of the application.
+
+    Returns:
+        tuple: A tuple containing a string indicating the status of the
+        application and an HTTP status code.
+    """
+    return "OK", 200
 
 
 @app.route("/api/v1/user_query", methods=["POST"])

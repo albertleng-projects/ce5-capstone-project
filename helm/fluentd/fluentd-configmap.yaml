@@ -1,0 +1,53 @@
+# helm/fluentd/fluentd-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+  namespace: logging
+  labels:
+    app: fluentd
+data:
+  fluent.conf: |
+    <source>
+      @type tail
+      path /var/log/containers/*_chatbot_*.log
+      pos_file /var/log/fluentd-chatbot.pos
+      tag chatbot.*
+      format json
+      time_format %Y-%m-%dT%H:%M:%S.%NZ
+      read_from_head true
+    </source>
+
+    <source>
+      @type tail
+      path /var/log/containers/*_sentiment-analysis-api_*.log
+      pos_file /var/log/fluentd-sentiment-analysis-api.pos
+      tag sentiment-analysis-api.*
+      format json
+      time_format %Y-%m-%dT%H:%M:%S.%NZ
+      read_from_head true
+    </source>
+
+    <match chatbot.**>
+      @type elasticsearch
+      host elasticsearch-master
+      port 9200
+      logstash_format true
+      logstash_prefix chatbot
+      logstash_dateformat %Y.%m.%d
+      include_tag_key true
+      type_name access_log
+      flush_interval 5s
+    </match>
+
+    <match sentiment-analysis-api.**>
+      @type elasticsearch
+      host elasticsearch-master
+      port 9200
+      logstash_format true
+      logstash_prefix sentiment-analysis-api
+      logstash_dateformat %Y.%m.%d
+      include_tag_key true
+      type_name access_log
+      flush_interval 5s
+    </match>

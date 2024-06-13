@@ -12,6 +12,7 @@ import logging
 import requests
 import streamlit as st
 import openai
+from flask import Flask
 from dotenv import load_dotenv
 from bot_logic import query
 from logger_config import setup_logger
@@ -32,6 +33,9 @@ logger = setup_logger(script_name, LOGGING_LEVEL)
 
 st.title("👠 Albert Shoes Chatbot App")
 chat_placeholder = st.empty()
+
+# Initialize Flask app
+app = Flask(__name__)
 
 
 def call_sentiment_analysis_api(prompt: str) -> Optional[dict]:

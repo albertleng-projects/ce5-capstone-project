@@ -1,0 +1,63 @@
+# helm/templates/pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: elasticsearch-master-pv-0
+  namespace: logging
+  labels:
+    app: elasticsearch-master
+#  annotations:
+#    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
+#    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp2
+  awsElasticBlockStore:
+    volumeID: vol-0ee44ae5dbee725e6  # Unique EBS volume ID
+    fsType: ext4
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: elasticsearch-master-pv-1
+  namespace: logging
+  labels:
+    app: elasticsearch-master
+#  annotations:
+#    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
+#    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp2
+  awsElasticBlockStore:
+    volumeID: vol-06d86a1e4ca80a3fd  # Another unique EBS volume ID
+    fsType: ext4
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: elasticsearch-master-pv-2
+  namespace: logging
+  labels:
+    app: elasticsearch-master
+#  annotations:
+#    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
+#    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp2
+  awsElasticBlockStore:
+    volumeID: vol-0fb503cfdb25b1120  # Another unique EBS volume ID
+    fsType: ext4

@@ -1,0 +1,14 @@
+# helm/fluentd/values.yaml
+elasticsearchHosts: "elasticsearch-master:9200"
+replicas: 1
+#service:
+#  type: LoadBalancer
+#  port: 5601
+
+fluentd:
+  configMap:
+    name: fluentd-config
+  output:
+    elasticsearch:
+      host: "elasticsearch-master"
+      port: 9200

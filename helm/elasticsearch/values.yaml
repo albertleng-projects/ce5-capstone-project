@@ -1,0 +1,30 @@
+# helm/elasticsearch/values.yaml
+clusterName: "elasticsearch"
+nodeGroup: "master"
+master:
+  replicas: 3
+  heapSize: "512m"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "512Mi"
+persistence:
+  enabled: true
+  storageClass: "gp2"  # Update this to match your actual storage class
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+  volumeClaimTemplate:
+    metadata:
+      annotations: { }
+    spec:
+      storageClassName: "gp2"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+  host: 0.0.0.0

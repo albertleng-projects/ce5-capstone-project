@@ -1,3 +1,4 @@
+# helm/templates/sentiment-analysis-api-hpa.yaml
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:

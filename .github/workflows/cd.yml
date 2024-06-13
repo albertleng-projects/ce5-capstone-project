@@ -1,3 +1,4 @@
+# .github/workflows/cd.yml
 name: 🚀 Infrastructure Setup, Build and Push Images and Deploy Albert Shoes Chatbot
 
 on:
@@ -86,6 +87,18 @@ jobs:
       - name: 🛡️ Set up Helm
         uses: Azure/setup-helm@v4.2.0
 
+      - name: 🔍 Add Elastic Helm repository
+        run: helm repo add elastic https://helm.elastic.co
+
+      - name: 🔍 Add Bitnami Helm repository
+        run: helm repo add bitnami https://charts.bitnami.com/bitnami
+
+      - name: 🔍 Add fluent Helm repository
+        run: helm repo add fluent https://fluent.github.io/helm-charts
+
+      - name: 🔄 Update Helm repositories
+        run: helm repo update
+
       - name: 🔐 Install helm-secrets plugin
         run: helm plugin install https://github.com/jkroepke/helm-secrets --version v4.6.0
 
@@ -124,6 +137,29 @@ jobs:
           echo "Current Kubernetes context:"
           kubectl config current-context
 
+      - name: 🏷️ Recreate logging namespace
+        run: |
+          if kubectl get namespace logging; then
+            echo "Deleting existing logging namespace"
+            kubectl delete namespace logging
+          fi
+          echo "Creating logging namespace"
+          kubectl create namespace logging
+
+      - name: 🛠️ Install pv and pvc
+        run: |
+          kubectl apply -f helm/pv.yaml
+          kubectl apply -f helm/pvc.yaml
+
+      - name: 📦 Deploy Elasticsearch with Helm
+        run: helm upgrade --install elasticsearch elastic/elasticsearch -n logging -f helm/elasticsearch/values.yaml --timeout 10m
+
+      - name: 📦 Deploy Kibana with Helm
+        run: helm upgrade --install kibana bitnami/kibana -n logging -f helm/kibana/values.yaml --set elasticsearch.hosts[0]=http://elasticsearch-master,elasticsearch.port=9200 --timeout 10m
+
+      - name: 📦 Deploy Fluentd with Helm
+        run: helm upgrade --install fluentd fluent/fluentd -n logging -f helm/fluentd/values.yaml --timeout 10m
+
       - name: 🏷️ Create namespace if not exists
         run: |
           TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
@@ -155,7 +191,7 @@ jobs:
           sed -i 's/PLACEHOLDER_AWS_SECRET_ACCESS_KEY/'$(yq e .AWS_SECRET_ACCESS_KEY secrets.dec.yaml)'/g' values.yaml
 
       # TODO: (low priority) Make albert-shoes-shop-chatbot a variable
-      - name: 🧹 Check and uninstall namespaces
+      - name: 🧹 Check namespaces and uninstall releases
         run: |
           for namespace in develop staging main; do
             echo "Checking if namespace $namespace exists..."
