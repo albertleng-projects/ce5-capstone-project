@@ -6,10 +6,10 @@ metadata:
   namespace: logging
   labels:
     app: elasticsearch-master
-    app.kubernetes.io/managed-by: Helm  # Add this label
+    app.kubernetes.io/managed-by: Helm
   annotations:
-    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
-    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
+    meta.helm.sh/release-name: albert-shoes-shop-chatbot
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
@@ -25,10 +25,10 @@ metadata:
   namespace: logging
   labels:
     app: elasticsearch-master
-    app.kubernetes.io/managed-by: Helm  # Add this label
+    app.kubernetes.io/managed-by: Helm
   annotations:
-    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
-    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
+    meta.helm.sh/release-name: albert-shoes-shop-chatbot
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
@@ -44,10 +44,10 @@ metadata:
   namespace: logging
   labels:
     app: elasticsearch-master
-    app.kubernetes.io/managed-by: Helm  # Add this label
+    app.kubernetes.io/managed-by: Helm
   annotations:
-    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
-    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
+    meta.helm.sh/release-name: albert-shoes-shop-chatbot
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
