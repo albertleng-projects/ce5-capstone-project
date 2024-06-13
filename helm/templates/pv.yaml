@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: elasticsearch-pv
+  name: elasticsearch-master-pv-0
 spec:
   capacity:
     storage: 10Gi
@@ -11,5 +11,39 @@ spec:
     - ReadWriteOnce
   storageClassName: gp2
   awsElasticBlockStore:
-    volumeID: vol-0ee44ae5dbee725e6
+    volumeID: vol-0ee44ae5dbee725e6  # Unique EBS volume ID
+    fsType: ext4
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: elasticsearch-master-pv-1
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp2
+  awsElasticBlockStore:
+    volumeID: vol-06d86a1e4ca80a3fd  # Another unique EBS volume ID
+    fsType: ext4
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: elasticsearch-master-pv-2
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp2
+  awsElasticBlockStore:
+    volumeID: vol-0fb503cfdb25b1120  # Another unique EBS volume ID
     fsType: ext4
