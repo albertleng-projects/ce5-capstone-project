@@ -21,11 +21,10 @@ persistence:
     metadata:
       annotations: { }
     spec:
-      storageClassName: "gp2"  # Correct way to specify the storage class
+      storageClassName: "gp2"
       accessModes:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 10Gi  # Update this to match your actual storage size
-network:
+          storage: 10Gi
   host: 0.0.0.0
