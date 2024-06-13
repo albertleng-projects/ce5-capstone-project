@@ -146,6 +146,11 @@ jobs:
           echo "Creating logging namespace"
           kubectl create namespace logging
 
+      - name: 🛠️ Install pv and pvc
+        run: |
+          kubectl apply -f helm/pv.yaml
+          kubectl apply -f helm/pvc.yaml
+
       - name: 📦 Deploy Elasticsearch with Helm
         run: helm upgrade --install elasticsearch elastic/elasticsearch -n logging -f helm/elasticsearch/values.yaml --timeout 10m
 

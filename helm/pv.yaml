@@ -3,11 +3,12 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: elasticsearch-master-pv-0
+  namespace: logging
   labels:
     app: elasticsearch-master
-  annotations:
-    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
-    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
+#  annotations:
+#    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
+#    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
 spec:
   capacity:
     storage: 10Gi
@@ -23,11 +24,12 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: elasticsearch-master-pv-1
+  namespace: logging
   labels:
     app: elasticsearch-master
-  annotations:
-    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
-    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
+#  annotations:
+#    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
+#    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
 spec:
   capacity:
     storage: 10Gi
@@ -43,11 +45,12 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: elasticsearch-master-pv-2
+  namespace: logging
   labels:
     app: elasticsearch-master
-  annotations:
-    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
-    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
+#  annotations:
+#    meta.helm.sh/release-name: albert-shoes-shop-chatbot  # Add this annotation
+#    meta.helm.sh/release-namespace: {{ .Release.Namespace }}  # Add this annotation
 spec:
   capacity:
     storage: 10Gi
