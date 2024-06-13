@@ -90,6 +90,9 @@ jobs:
       - name: 🔍 Add Elastic Helm repository
         run: helm repo add elastic https://helm.elastic.co
 
+      - name: 🔍 Add Bitnami Helm repository
+        run: helm repo add bitnami https://charts.bitnami.com/bitnami
+
       - name: 🔄 Update Helm repositories
         run: helm repo update
 
