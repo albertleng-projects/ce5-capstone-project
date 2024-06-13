@@ -131,14 +131,14 @@ jobs:
           echo "Current Kubernetes context:"
           kubectl config current-context
 
-      - name: 🏷️ Create logging namespace if not exists
+      - name: 🏷️ Recreate logging namespace
         run: |
-          if ! kubectl get namespace logging; then
-            echo "Creating logging namespace"
-            kubectl create namespace logging
-          else
-            echo "Namespace logging already exists"
+          if kubectl get namespace logging; then
+            echo "Deleting existing logging namespace"
+            kubectl delete namespace logging
           fi
+          echo "Creating logging namespace"
+          kubectl create namespace logging
 
       - name: 📦 Deploy Elasticsearch with Helm
         run: helm upgrade --install elasticsearch elastic/elasticsearch -n logging -f helm/elasticsearch/values.yaml --timeout 10m
