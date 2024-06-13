@@ -39,6 +39,7 @@ chat_placeholder = st.empty()
 # Initialize Flask app
 app = Flask(__name__)
 
+
 # TODO: Add test for 'health' endpoint
 @app.route("/health", methods=["GET"])
 def health():
