@@ -155,7 +155,7 @@ The `cd.yml` workflow is triggered on pull requests to the `develop`, `staging`,
 and `main` branches. It includes several jobs:
 ![](./img/cd.png)
 
-- [terraform](./terraform): This job checks out the code, configures AWS
+- [terraform](./terraform/main.tf): This job checks out the code, configures AWS
   credentials, sets up
   🌍 Terraform, and then runs `terraform init`, `terraform plan`,
   and `terraform apply`.
