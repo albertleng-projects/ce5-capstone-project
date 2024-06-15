@@ -127,7 +127,8 @@ Here's an overview of what each workflow does:
 The `branch_protection_rules.yml` workflow is triggered on pull requests to
 the 🌳 `develop`, `staging`, and `main` branches. It includes a job that
 validates the name of the source branch of the pull request based on the target
-branch.
+branch. It also triggers the `repository_dispatch` event with the type
+`branch-rules-checked` if the branch name is valid.
 ![](./img/branch_protection_rule.png)
 
 ### 🧪 Continuous Integration (CI)
