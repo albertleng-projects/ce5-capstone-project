@@ -19,6 +19,8 @@ are not limited to:
     - Streamlit
     - LangChain
 - OpenAI
+- gpg (GNU Privacy Guard) *for pgp (Pretty Good Privacy) encryption for secrets
+  in helm chart*
 - Others
 
 ## Table of Contents
