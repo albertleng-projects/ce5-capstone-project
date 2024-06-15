@@ -24,8 +24,8 @@ are not limited to:
 ## Table of Contents
 
 1. [Overview](#-overview)
-2. [Git Flow Branching Strategy](#-git-flow-branching-strategy)
-3. [Agile Development Process](#-agile-development-process)
+2. [Agile Development Process](#-agile-development-process)
+3. [Git Flow Branching Strategy](#-git-flow-branching-strategy)
 4. [GitHub Actions Workflows](#-github-actions-workflows)
 5. [Terraform Infrastructure as Code](#-terraform-infrastructure-as-code)
 6. [Running the App Locally](#-running-the-app-locally)
@@ -37,6 +37,36 @@ are not limited to:
 The diagram below shows the architecture of the project:
 
 ![](img/architecture.png)
+
+### 🔄 Agile Development Process
+
+Our team **ALBERT TEAM** consists of 3 members:
+
+- Albert Leng - Product Owner
+- Leng Zai - Developer
+- Luqman - Scrum Master (*the 👑 big boss 🕶️*)  
+  *(Note: The members mentioned are fictitious and used for illustrative
+  purposes
+  only.)*
+
+![](img/JIRA-team-member.png)
+
+JIRA is used to manage the project. The project is divided into Epics and Tasks
+(also known as Tickets) which are assigned to team members. The progress of the
+project is tracked using the JIRA board.
+
+![](img/JIRA-board.png)
+
+Each ticket is assigned to a team member and has a status that indicates the
+progress. It is moved from one status to another as the work progresses. It also
+consists of priority, descriptions and comments.
+
+![](img/JIRA-ticket.png)
+
+We integrate JIRA with GitHub to link commits and pull requests to JIRA issues
+for streamlined tracking and visibility.
+
+![](img/JIRA-github.png)
 
 ## 🌿 Git Flow Branching Strategy
 
@@ -72,36 +102,6 @@ least
 one approval and passing of the CI/CD checks before merging into the `develop`,
 `staging` and `main` branch.
 ![](img/branch_protection_rules02.png)
-
-### 🔄 Agile Development Process
-
-Our team **ALBERT TEAM** consists of 3 members:
-
-- Albert Leng - Product Owner
-- Leng Zai - Developer
-- Luqman - Scrum Master (*the 👑 big boss 🕶️*)  
-  *(Note: The members mentioned are fictitious and used for illustrative
-  purposes
-  only.)*
-
-![](img/JIRA-team-member.png)
-
-JIRA is used to manage the project. The project is divided into Epics and Tasks
-(also known as Tickets) which are assigned to team members. The progress of the
-project is tracked using the JIRA board.
-
-![](img/JIRA-board.png)
-
-Each ticket is assigned to a team member and has a status that indicates the
-progress. It is moved from one status to another as the work progresses. It also
-consists of priority, descriptions and comments.
-
-![](img/JIRA-ticket.png)
-
-We integrate JIRA with GitHub to link commits and pull requests to JIRA issues
-for streamlined tracking and visibility.
-
-![](img/JIRA-github.png)
 
 ## 🚀 GitHub Actions Workflows
 
