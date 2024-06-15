@@ -1,9 +1,8 @@
-environment: main
-version: 0.0.6
+environment: develop
+version: 1.0.0
 account_id: 255945442255
 
 images:
-  #  TODO: (Low priority) Update the repository URLs using variables
   chatbot:
     repository: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce5-group6-ecr-chatbot
   sentimentAnalysisApi:

@@ -316,3 +316,5 @@ helm/secrets.dec.yaml
 
 helm/private*.gpg*
 
+.DS_Store
+

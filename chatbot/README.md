@@ -1,13 +1,16 @@
-## Project : A Custom Q&A Chatbot built with OpenAI, LangChain, Chroma and Streamlit
+## Project : Albert Shoes Shop Chatbot  *(built with OpenAI, LangChain and Streamlit)*
 
 ## 💻 Project Overview
 
-Welcome to our custom Q&A chatbot, a sophisticated tool powered by OpenAI, LangChain, and Chroma. This chatbot is designed to provide accurate and contextually relevant responses to user queries.
+Welcome to Albert Shoes Shop Chatbot, a sophisticated tool powered by OpenAI, LangChain, and Chroma. This chatbot is designed to provide accurate and contextually relevant responses to user queries.
 
-- **OpenAI**: Our chatbot utilizes the OpenAI API to generate intelligent and relevant answers to a wide range of questions.
+- **OpenAI**: The chatbot utilizes the OpenAI API to generate intelligent and relevant answers to a wide range of questions.
 - **LangChain**: With the help of LangChain, our chatbot supports multilingual interactions, translating user queries and responses between English and other languages.
-- **Chroma**: To enhance the user experience, our chatbot employs Chroma to convert text responses into speech, providing an auditory response to user queries.
-- **Streamlit**: Our chatbot is deployed as a web application using Streamlit, hosted in AWS. It allows users to interact with the chatbot through a user-friendly interface.
+- **Streamlit**: The chatbot is deployed as a web application using Streamlit, hosted in AWS. It allows users to interact with the chatbot through a user-friendly interface.
+
+## Architectural Diagram
+![](../img/albert-chatbot.png)
+
 
 ## 🛠️ Requirements : Installation & Setup
 
@@ -18,9 +21,6 @@ Welcome to our custom Q&A chatbot, a sophisticated tool powered by OpenAI, LangC
 - **LangChain** :[LangChain](https://www.langchain.com/) is a Python library
   that translates text to and from any language. It uses the Google Translate
   API to translate text. It also uses the Google Cloud Text-to-Speech API to
-  convert text to speech.
-- **Chroma** : [Chroma](https://www.trychroma.com/) is a Python library that
-  converts text to speech. It uses the Google Cloud Text-to-Speech API to
   convert text to speech.
 - **OpenAI** : [OpenAI](https://python.langchain.com/docs/integrations/platforms/openai)
   is a Python library that provides a simple interface to the OpenAI API. It
