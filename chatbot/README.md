@@ -1,6 +1,4 @@
-## Project : Albert Shoes Shop Chatbot  *(built with OpenAI, LangChain and
-
-Streamlit)*
+## Project : Albert Shoes Shop Chatbot  *(built with OpenAI, LangChain and Streamlit)*
 
 ## 💻 Project Overview
 
@@ -32,7 +30,8 @@ contextually relevant responses to user queries.
   LangChain simplifies various stages of the LLM application lifecycle, from
   development and productionization to deployment. It provides building blocks
   and components to construct LLM-powered apps.
-- **OpenAI** : [OpenAI](https://python.langchain.com/docs/integrations/platforms/openai)
+- **OpenAI
+  ** : [OpenAI](https://python.langchain.com/docs/integrations/platforms/openai)
   is a Python library that provides a simple interface to the OpenAI API. It
   also provides a command-line interface (CLI) for interacting with the API.
 - **python-dotenv** : [python-dotenv](https://pypi.org/project/python-dotenv/)
